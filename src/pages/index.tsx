@@ -9,6 +9,8 @@ import { calcNfts } from "@/lib/calcNfts";
 import Header from "@/components/header";
 import { getTokensByOwner } from "@/lib/nfts/getTokensByOwner";
 import NFTModal from "@/components/nfts-modal";
+import { calcTokens } from "@/lib/calcTokens";
+import { numberWithCommas } from "@/lib/numberWithCommas";
 
 export default function Home() {
   const { connected } = useWallet();
@@ -20,11 +22,12 @@ export default function Home() {
   const [items, setItems] = useState<any>([]);
 
   let nfts = calcNfts(amount);
+  let tokens = calcTokens(items.length);
 
   return (
     <>
       <WalletModal open={open} setOpen={setOpen} />
-      <NFTModal open={isOpen} setOpen={setIsOpen} setNFTs={setItems} />
+      <NFTModal open={isOpen} setOpen={setIsOpen} nfts={items} setNFTs={setItems} />
       <Header />
       <main
         className={`relative flex min-h-screen flex-col items-center justify-center`}
@@ -113,18 +116,27 @@ export default function Home() {
                   <div className="window-body !p-0">
                     <div className="bg-white flex gap-2 items-center justify-center p-3">
                       {items.length > 0 ? (
-                        <div className="grid grid-cols-3 gap-2">
-                          {items?.map((item: any, i: number) => (
-                            <div key={i}>
-                              <Image
-                                src={item.content.links.image}
-                                alt=""
-                                width={80}
-                                height={80}
-                                className="shadow-lg"
-                              />
-                            </div>
-                          ))}
+                        <div className="flex-col justify-center w-full">
+                          <div className="grid grid-cols-3 gap-2">
+                            {items?.map((item: any, i: number) => (
+                              <div key={i}>
+                                <Image
+                                  src={item.content.links.image}
+                                  alt=""
+                                  width={80}
+                                  height={80}
+                                  onClick={() => setItems((prev: any) => prev.toSpliced(i, 1))}
+                                  className="shadow-lg hover:border-2 hover:border-red-500"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                          <button
+                            onClick={() => setIsOpen(true)}
+                            className="mt-2"
+                          >
+                            Select Your NFTs
+                          </button>
                         </div>
                       ) : (
                         <button onClick={() => setIsOpen(true)}>
@@ -260,7 +272,7 @@ export default function Home() {
                           width={30}
                           height={30}
                         />
-                        <label className="text-xl">100,000 QUACK</label>
+                        <label className="text-xl">{numberWithCommas(tokens)} QUACK</label>
                       </div>
                     </div>
                   </div>

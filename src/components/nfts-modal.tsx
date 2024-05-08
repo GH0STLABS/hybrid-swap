@@ -12,10 +12,11 @@ import React, { useEffect, useState } from "react";
 interface NFTModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  nfts: any[],
   setNFTs: React.Dispatch<React.SetStateAction<any>>;
 }
 
-export default function NFTModal({ open, setOpen, setNFTs }: NFTModalProps) {
+export default function NFTModal({ open, setOpen, nfts, setNFTs }: NFTModalProps) {
   const { publicKey, connected } = useWallet();
   const [items, setItems] = useState<any>(null);
 
@@ -57,13 +58,13 @@ export default function NFTModal({ open, setOpen, setNFTs }: NFTModalProps) {
                   alt=""
                   width={80}
                   height={80}
-                  className="shadow-lg"
+                  className={`shadow-lg hover:border-2 hover:border-blue-500 ${nfts.includes(item) ? "border-3 border-yellow-800" : null}`}
                 />
               </div>
             ))}
           </div>
         ) : (
-          <></>
+          <label>No NFTs found :(</label>
         )}
       </DialogContent>
     </Dialog>
