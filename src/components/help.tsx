@@ -1,7 +1,8 @@
-import { Fragment, SetStateAction } from "react";
+import { Fragment, SetStateAction, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WL_KEYS } from "@/solana/source/consts";
+import CreateModal from "./create-modal";
 
 interface HelpMenuProps {
   open: boolean;
@@ -9,8 +10,11 @@ interface HelpMenuProps {
 }
 
 export default function HelpMenu({ open, setOpen }: HelpMenuProps) {
-    const { publicKey } = useWallet();
+  const { publicKey } = useWallet();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
+    <>
+    <CreateModal open={isOpen} setOpen={setIsOpen} />
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="fixed z-[100]" onClose={setOpen}>
         <Transition.Child
@@ -66,10 +70,8 @@ export default function HelpMenu({ open, setOpen }: HelpMenuProps) {
                           initially.
                         </label>
                         {WL_KEYS.includes(publicKey?.toString() as string) ? (
-                        <button className="mt-4 btn">
-                            Create Pool
-                        </button>
-                      ) : null}
+                          <button onClick={() => setIsOpen(true)} className="mt-4 btn">Create Pool</button>
+                        ) : null}
                       </div>
                     </div>
                   </div>
@@ -80,5 +82,6 @@ export default function HelpMenu({ open, setOpen }: HelpMenuProps) {
         </div>
       </Dialog>
     </Transition.Root>
+    </>
   );
 }

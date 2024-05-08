@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
 
-export const rpc = `https://rpc.ironforge.network/${process.env.NEXT_PUBLIC_SOLANA_ENVIRONMENT}?apiKey=${process.env.NEXT_PUBLIC_IRONFORGE_API_KEY}`;
+export const rpc = process.env.NEXT_PUBLIC_HELIUS_ENDPOINT;
 
-export const connection = new anchor.web3.Connection(rpc, 'confirmed');
+export const connection = new anchor.web3.Connection(rpc as string, 'confirmed');

@@ -29,7 +29,7 @@ interface SwapToTokenArgs {
 export async function swapToToken(wallet: NodeWallet, metadata: SwapToTokenArgs) {
   let { sponsorPDA, tokenMint, nftMint } = metadata;
 
-  const umi = await initUmi(rpc, wallet);
+  const umi = await initUmi(rpc as string, wallet);
 
   const program = await getProgram(wallet);
 
