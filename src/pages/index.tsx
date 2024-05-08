@@ -1,118 +1,332 @@
+import SynthwaveScene from "@/components/ui/grid-animation";
+import { Vortex } from "@/components/ui/vortex";
 import Image from "next/image";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import { motion } from "framer-motion";
+import WalletModal from "@/components/wallet-modal";
+import { useEffect, useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { calcNfts } from "@/lib/calcNfts";
+import Header from "@/components/header";
+import { getTokensByOwner } from "@/lib/nfts/getTokensByOwner";
+import NFTModal from "@/components/nfts-modal";
 
 export default function Home() {
+  const { connected } = useWallet();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [mode, setMode] = useState<boolean>(false);
+  const [amount, setAmount] = useState<number>(0);
+  const [disabled, setDisabled] = useState<boolean>(false);
+  const [items, setItems] = useState<any>([]);
+
+  let nfts = calcNfts(amount);
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <>
+      <WalletModal open={open} setOpen={setOpen} />
+      <NFTModal open={isOpen} setOpen={setIsOpen} setNFTs={setItems} />
+      <Header />
+      <main
+        className={`relative flex min-h-screen flex-col items-center justify-center`}
+      >
+        <div className="w-full mx-auto h-screen overflow-hidden">
+          <div className="z-50 mt-32 bg-transparent flex flex-col items-center justify-center">
+            <div className="flex-col space-y-4 items-center justify-center">
+              {mode ? (
+                <motion.div
+                  initial={{ opacity: 0.5, y: 100 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: 0.3,
+                    duration: 0.8,
+                    ease: "easeInOut",
+                  }}
+                  className="window w-[22rem]"
+                >
+                  <div className="title-bar">
+                    <div className="title-bar-text pointer-events-none flex gap-1 items-center">
+                      <svg
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        className="w-5 h-5"
+                      >
+                        {" "}
+                        <path
+                          d="M6 2h12v2H6V2zM4 6V4h2v2H4zm0 12V6H2v12h2zm2 2v-2H4v2h2zm12 0v2H6v-2h12zm2-2v2h-2v-2h2zm0-12h2v12h-2V6zm0 0V4h-2v2h2zm-9-1h2v2h3v2h-6v2h6v6h-3v2h-2v-2H8v-2h6v-2H8V7h3V5z"
+                          fill="currentColor"
+                        />{" "}
+                      </svg>
+                      <label>Select Token Amount</label>
+                    </div>
+                  </div>
+                  <div className="window-body !p-0">
+                    <div className="bg-white p-3">
+                      <div className="flex gap-2 items-center">
+                        <Image
+                          src="/quacklogo.jpeg"
+                          alt=""
+                          width={30}
+                          height={30}
+                        />
+                        <input
+                          defaultValue={amount}
+                          onChange={(e) => setAmount(parseInt(e.target.value))}
+                          className="text-lg pl-2 border border-zinc-500/50"
+                        />
+                        <label className="text-base font-medium">QUACK</label>
+                      </div>
+                      <label className="mt-1 pl-9 text-[9px]">
+                        • 100k QUACK = 1 NFT
+                      </label>
+                    </div>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0.5, y: 100 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: 0.3,
+                    duration: 0.8,
+                    ease: "easeInOut",
+                  }}
+                  className="window w-[22rem]"
+                >
+                  <div className="title-bar">
+                    <div className="title-bar-text pointer-events-none flex gap-2 items-center">
+                      <svg
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        className="w-5 h-5"
+                      >
+                        {" "}
+                        <path
+                          d="M24 2H4v16h20V2zM6 16V4h16v12H6zM2 4H0v18h20v-2H2V4zm12 2h2v2h-2V6zm-2 4V8h2v2h-2zm-2 2v-2h2v2h-2zm0 0v2H8v-2h2zm8-2h-2V8h2v2zm0 0h2v2h-2v-2zM8 6h2v2H8V6z"
+                          fill="currentColor"
+                        />{" "}
+                      </svg>
+                      <label>Select Your Quack NFTs</label>
+                    </div>
+                  </div>
+                  <div className="window-body !p-0">
+                    <div className="bg-white flex gap-2 items-center justify-center p-3">
+                      {items.length > 0 ? (
+                        <div className="grid grid-cols-3 gap-2">
+                          {items?.map((item: any, i: number) => (
+                            <div key={i}>
+                              <Image
+                                src={item.content.links.image}
+                                alt=""
+                                width={80}
+                                height={80}
+                                className="shadow-lg"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <button onClick={() => setIsOpen(true)}>
+                          Select Your NFTs
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Swap Icon */}
+              <motion.div
+                initial={{ opacity: 0.5, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: 0.3,
+                  duration: 0.8,
+                  ease: "easeInOut",
+                }}
+                onClick={() => (mode ? setMode(false) : setMode(true))}
+                className="z-50 p-2 mx-auto w-fit hover:bg-zinc-500/50"
+              >
+                <svg
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-7 h-7 mx-auto z-50"
+                >
+                  {" "}
+                  <path
+                    d="M8 20H6V8H4V6h2V4h2v2h2v2H8v12zm2-12v2h2V8h-2zM4 8v2H2V8h2zm14-4h-2v12h-2v-2h-2v2h2v2h2v2h2v-2h2v-2h2v-2h-2v2h-2V4z"
+                    fill="currentColor"
+                  />{" "}
+                </svg>
+              </motion.div>
+
+              {/* User confirms or deselects */}
+              {mode ? (
+                <motion.div
+                  initial={{ opacity: 0.5, y: 100 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: 0.3,
+                    duration: 0.8,
+                    ease: "easeInOut",
+                  }}
+                  className="window w-[22rem]"
+                >
+                  <div className="title-bar">
+                    <div className="title-bar-text pointer-events-none flex gap-2 items-center">
+                      <svg
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        className="w-5 h-5"
+                      >
+                        {" "}
+                        <path
+                          d="M24 2H4v16h20V2zM6 16V4h16v12H6zM2 4H0v18h20v-2H2V4zm12 2h2v2h-2V6zm-2 4V8h2v2h-2zm-2 2v-2h2v2h-2zm0 0v2H8v-2h2zm8-2h-2V8h2v2zm0 0h2v2h-2v-2zM8 6h2v2H8V6z"
+                          fill="currentColor"
+                        />{" "}
+                      </svg>
+                      <label>To Receive</label>
+                    </div>
+                  </div>
+                  <div className="window-body !p-0">
+                    <div className="bg-white p-3">
+                      {isNaN(nfts) || nfts == 0 ? (
+                        <div className="flex gap-2 items-center justify-center">
+                          <Image
+                            src="/duck_dancing.gif"
+                            alt=""
+                            width={80}
+                            height={80}
+                          />
+                          <label className="text-lg">Insufficient QUACK</label>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2 items-center">
+                          <Image
+                            src="/hardhatquack.png"
+                            alt=""
+                            width={30}
+                            height={30}
+                            className="rounded-full"
+                          />
+                          <label className="text-green-700 font-semibold text-lg">
+                            {nfts}
+                          </label>
+                          <label className="text-lg">
+                            QUACK NFT{nfts > 1 && "s"}
+                          </label>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0.5, y: 100 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: 0.3,
+                    duration: 0.8,
+                    ease: "easeInOut",
+                  }}
+                  className="window w-[22rem]"
+                >
+                  <div className="title-bar">
+                    <div className="title-bar-text pointer-events-none flex gap-1 items-center">
+                      <svg
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        className="w-5 h-5"
+                      >
+                        {" "}
+                        <path
+                          d="M6 2h12v2H6V2zM4 6V4h2v2H4zm0 12V6H2v12h2zm2 2v-2H4v2h2zm12 0v2H6v-2h12zm2-2v2h-2v-2h2zm0-12h2v12h-2V6zm0 0V4h-2v2h2zm-9-1h2v2h3v2h-6v2h6v6h-3v2h-2v-2H8v-2h6v-2H8V7h3V5z"
+                          fill="currentColor"
+                        />{" "}
+                      </svg>
+                      <label>To Receive</label>
+                    </div>
+                  </div>
+                  <div className="window-body !p-0">
+                    <div className="bg-white p-3">
+                      <div className="flex gap-2 items-center">
+                        <Image
+                          src="/quacklogo.jpeg"
+                          alt=""
+                          width={30}
+                          height={30}
+                        />
+                        <label className="text-xl">100,000 QUACK</label>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+              <motion.div
+                initial={{ opacity: 0.5, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: 0.3,
+                  duration: 0.8,
+                  ease: "easeInOut",
+                }}
+                className="mt-4 w-full"
+              >
+                <button
+                  disabled={disabled}
+                  onClick={() => setOpen(true)}
+                  className="btn p-2 w-full flex gap-3 items-center justify-center text-xl"
+                >
+                  {connected ? (
+                    <>
+                      <svg
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        className={`${
+                          disabled
+                            ? "text-zinc-400 text-shadow-sm shadow-white"
+                            : "text-black"
+                        } w-6 h-6`}
+                      >
+                        {" "}
+                        <path
+                          d="M12 1h2v8h8v4h-2v-2h-8V5h-2V3h2V1zM8 7V5h2v2H8zM6 9V7h2v2H6zm-2 2V9h2v2H4zm10 8v2h-2v2h-2v-8H2v-4h2v2h8v6h2zm2-2v2h-2v-2h2zm2-2v2h-2v-2h2zm0 0h2v-2h-2v2z"
+                          fill="currentColor"
+                        />{" "}
+                      </svg>
+                      Swap
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        className="w-6 h-6 text-black"
+                      >
+                        {" "}
+                        <path
+                          d="M18 3H2v18h18v-4h2V7h-2V3h-2zm0 14v2H4V5h14v2h-8v10h8zm2-2h-8V9h8v6zm-4-4h-2v2h2v-2z"
+                          fill="currentColor"
+                        />{" "}
+                      </svg>
+                      Connect Wallet
+                    </>
+                  )}
+                </button>
+              </motion.div>
+            </div>
+          </div>
+          <div className="absolute -z-50 w-full bottom-0 h-3/4">
+            <SynthwaveScene />
+          </div>
         </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
