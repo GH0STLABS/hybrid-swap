@@ -2,9 +2,18 @@ import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import { getProgram } from "../source/program";
 import * as anchor from "@coral-xyz/anchor";
 import * as spl from "@solana/spl-token";
-import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
+import {
+  ComputeBudgetProgram,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+} from "@solana/web3.js";
 import { connection, rpc } from "../source/connection";
-import { feeWallets, metadataProgram, sysvarInstructions } from "../source/consts";
+import {
+  feeWallets,
+  metadataProgram,
+  sysvarInstructions,
+} from "../source/consts";
 import {
   findMasterEditionPda,
   findMetadataPda,
@@ -26,7 +35,10 @@ interface SwapToTokenArgs {
     @params Wallet as "NodeWallet" type, metadata with "DepositArgs" type
     @returns Transaction object with the deposit instruction
 **/
-export async function swapToToken(wallet: NodeWallet, metadata: SwapToTokenArgs) {
+export async function swapToToken(
+  wallet: NodeWallet,
+  metadata: SwapToTokenArgs
+) {
   let { sponsorPDA, tokenMint, nftMint } = metadata;
 
   const umi = await initUmi(rpc as string, wallet);
@@ -96,7 +108,10 @@ export async function swapToToken(wallet: NodeWallet, metadata: SwapToTokenArgs)
     spl.ASSOCIATED_TOKEN_PROGRAM_ID
   );
 
-  console.log("NFT Token", new anchor.web3.PublicKey(publicKey(nftToken)).toString());
+  console.log(
+    "NFT Token",
+    new anchor.web3.PublicKey(publicKey(nftToken)).toString()
+  );
 
   // GET TOKEN RECORDS
   const sourceTokenRecord = findTokenRecordPda(umi, {
@@ -110,6 +125,10 @@ export async function swapToToken(wallet: NodeWallet, metadata: SwapToTokenArgs)
   });
 
   const nftMetadata = findMetadataPda(umi, { mint: publicKey(nftMint) });
+  console.log(
+    "NFT Metadata",
+    new anchor.web3.PublicKey(publicKey(nftMetadata)).toString()
+  );
 
   const nftEdition = findMasterEditionPda(umi, { mint: publicKey(nftMint) });
 
@@ -122,12 +141,12 @@ export async function swapToToken(wallet: NodeWallet, metadata: SwapToTokenArgs)
       sponsorTokenAccount: sponsorTokenAccount,
       nftToken: new anchor.web3.PublicKey(nftToken),
       nftMint: new anchor.web3.PublicKey(nftMint),
-      nftMetadata: new anchor.web3.PublicKey(nftMetadata),
+      nftMetadata: new anchor.web3.PublicKey(publicKey(nftMetadata)),
       nftAuthority: nftAuthorityPda,
       nftCustody: nftCustody,
-      nftEdition: new anchor.web3.PublicKey(nftEdition),
-      sourceTokenRecord: new PublicKey(sourceTokenRecord),
-      destinationTokenRecord: new PublicKey(destinationTokenRecord),
+      nftEdition: new anchor.web3.PublicKey(publicKey(nftEdition)),
+      sourceTokenRecord: new PublicKey(publicKey(sourceTokenRecord)),
+      destinationTokenRecord: new PublicKey(publicKey(destinationTokenRecord)),
       feeWallet: new anchor.web3.PublicKey(feeWallets[0]),
       feeWalletTwo: new anchor.web3.PublicKey(feeWallets[1]),
       feeWalletThree: new anchor.web3.PublicKey(feeWallets[2]),
@@ -136,11 +155,19 @@ export async function swapToToken(wallet: NodeWallet, metadata: SwapToTokenArgs)
       systemProgram: SystemProgram.programId,
       associatedTokenProgram: spl.ASSOCIATED_TOKEN_PROGRAM_ID,
       metadataProgram: metadataProgram,
-      sysvarInstructions: sysvarInstructions
+      sysvarInstructions: sysvarInstructions,
     })
     .instruction();
 
-  await tx.add(instruction);
+  const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
+    units: 400_000,
+  });
+
+  const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
+    microLamports: 5000,
+  });
+
+  await tx.add(modifyComputeUnits, addPriorityFee, instruction);
 
   return tx;
 }
