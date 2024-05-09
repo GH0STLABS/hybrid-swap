@@ -4,7 +4,7 @@ import * as anchor from "@coral-xyz/anchor";
 import * as spl from "@solana/spl-token";
 import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { connection, rpc } from "../source/connection";
-import { feeWallets, metadataProgram } from "../source/consts";
+import { feeWallets, metadataProgram, sysvarInstructions } from "../source/consts";
 import {
   findMasterEditionPda,
   findMetadataPda,
@@ -81,10 +81,22 @@ export async function swapToToken(wallet: NodeWallet, metadata: SwapToTokenArgs)
   );
 
   // GET NFT TOKEN ACCOUNT
+  /*
   const nftToken = findAssociatedTokenPda(umi, {
     mint: publicKey(nftMintKey),
     owner: publicKey(wallet.publicKey),
   });
+  */
+
+  const nftToken = spl.getAssociatedTokenAddressSync(
+    nftMintKey,
+    wallet.publicKey,
+    true,
+    spl.TOKEN_PROGRAM_ID,
+    spl.ASSOCIATED_TOKEN_PROGRAM_ID
+  );
+
+  console.log("NFT Token", new anchor.web3.PublicKey(publicKey(nftToken)).toString());
 
   // GET TOKEN RECORDS
   const sourceTokenRecord = findTokenRecordPda(umi, {
@@ -124,6 +136,7 @@ export async function swapToToken(wallet: NodeWallet, metadata: SwapToTokenArgs)
       systemProgram: SystemProgram.programId,
       associatedTokenProgram: spl.ASSOCIATED_TOKEN_PROGRAM_ID,
       metadataProgram: metadataProgram,
+      sysvarInstructions: sysvarInstructions
     })
     .instruction();
 

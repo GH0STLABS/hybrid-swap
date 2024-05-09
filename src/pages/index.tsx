@@ -4,16 +4,19 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import WalletModal from "@/components/wallet-modal";
 import { useEffect, useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { calcNfts } from "@/lib/calcNfts";
 import Header from "@/components/header";
 import { getTokensByOwner } from "@/lib/nfts/getTokensByOwner";
 import NFTModal from "@/components/nfts-modal";
 import { calcTokens } from "@/lib/calcTokens";
 import { numberWithCommas } from "@/lib/numberWithCommas";
+import { swapNFT } from "@/lib/swapNFT";
+import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 
 export default function Home() {
-  const { connected } = useWallet();
+  const { connected, sendTransaction } = useWallet();
+  const wallet = useAnchorWallet();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [mode, setMode] = useState<boolean>(false);
@@ -27,7 +30,12 @@ export default function Home() {
   return (
     <>
       <WalletModal open={open} setOpen={setOpen} />
-      <NFTModal open={isOpen} setOpen={setIsOpen} nfts={items} setNFTs={setItems} />
+      <NFTModal
+        open={isOpen}
+        setOpen={setIsOpen}
+        nfts={items}
+        setNFTs={setItems}
+      />
       <Header />
       <main
         className={`relative flex min-h-screen flex-col items-center justify-center`}
@@ -125,7 +133,11 @@ export default function Home() {
                                   alt=""
                                   width={80}
                                   height={80}
-                                  onClick={() => setItems((prev: any) => prev.toSpliced(i, 1))}
+                                  onClick={() =>
+                                    setItems((prev: any) =>
+                                      prev.toSpliced(i, 1)
+                                    )
+                                  }
                                   className="shadow-lg hover:border-2 hover:border-red-500"
                                 />
                               </div>
@@ -272,7 +284,9 @@ export default function Home() {
                           width={30}
                           height={30}
                         />
-                        <label className="text-xl">{numberWithCommas(tokens)} QUACK</label>
+                        <label className="text-xl">
+                          {numberWithCommas(tokens)} QUACK
+                        </label>
                       </div>
                     </div>
                   </div>
@@ -288,49 +302,61 @@ export default function Home() {
                 }}
                 className="mt-4 w-full"
               >
-                <button
-                  disabled={disabled}
-                  onClick={() => setOpen(true)}
-                  className="btn p-2 w-full flex gap-3 items-center justify-center text-xl"
-                >
-                  {connected ? (
-                    <>
-                      <svg
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        className={`${
-                          disabled
-                            ? "text-zinc-400 text-shadow-sm shadow-white"
-                            : "text-black"
-                        } w-6 h-6`}
-                      >
-                        {" "}
-                        <path
-                          d="M12 1h2v8h8v4h-2v-2h-8V5h-2V3h2V1zM8 7V5h2v2H8zM6 9V7h2v2H6zm-2 2V9h2v2H4zm10 8v2h-2v2h-2v-8H2v-4h2v2h8v6h2zm2-2v2h-2v-2h2zm2-2v2h-2v-2h2zm0 0h2v-2h-2v2z"
-                          fill="currentColor"
-                        />{" "}
-                      </svg>
-                      Swap
-                    </>
-                  ) : (
-                    <>
-                      <svg
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        className="w-6 h-6 text-black"
-                      >
-                        {" "}
-                        <path
-                          d="M18 3H2v18h18v-4h2V7h-2V3h-2zm0 14v2H4V5h14v2h-8v10h8zm2-2h-8V9h8v6zm-4-4h-2v2h2v-2z"
-                          fill="currentColor"
-                        />{" "}
-                      </svg>
-                      Connect Wallet
-                    </>
-                  )}
-                </button>
+                {connected ? (
+                  <button
+                    disabled={disabled}
+                    onClick={async () => {
+                      if (!mode) {
+                        console.log(items[0].id)
+                        await swapNFT(
+                          wallet as NodeWallet,
+                          sendTransaction,
+                          0,
+                          items[0].id
+                        )
+                      }
+                    }}
+                    className="btn p-2 w-full flex gap-3 items-center justify-center text-xl"
+                  >
+                    <svg
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className={`${
+                        disabled
+                          ? "text-zinc-400 text-shadow-sm shadow-white"
+                          : "text-black"
+                      } w-6 h-6`}
+                    >
+                      {" "}
+                      <path
+                        d="M12 1h2v8h8v4h-2v-2h-8V5h-2V3h2V1zM8 7V5h2v2H8zM6 9V7h2v2H6zm-2 2V9h2v2H4zm10 8v2h-2v2h-2v-8H2v-4h2v2h8v6h2zm2-2v2h-2v-2h2zm2-2v2h-2v-2h2zm0 0h2v-2h-2v2z"
+                        fill="currentColor"
+                      />{" "}
+                    </svg>
+                    Swap
+                  </button>
+                ) : (
+                  <button
+                    disabled={disabled}
+                    onClick={() => setOpen(true)}
+                    className="btn p-2 w-full flex gap-3 items-center justify-center text-xl"
+                  >
+                    <svg
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="w-6 h-6 text-black"
+                    >
+                      {" "}
+                      <path
+                        d="M18 3H2v18h18v-4h2V7h-2V3h-2zm0 14v2H4V5h14v2h-8v10h8zm2-2h-8V9h8v6zm-4-4h-2v2h2v-2z"
+                        fill="currentColor"
+                      />{" "}
+                    </svg>
+                    Connect Wallet
+                  </button>
+                )}
               </motion.div>
             </div>
           </div>

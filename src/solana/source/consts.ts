@@ -21,3 +21,7 @@ export const WL_KEYS = [
   "AB83dJjfEzKsGKWpvVoEBR3jAGgbGAPccFirVV1Bh1eJ",
   "gho8CjpEQ6quw77oLX8ZgSrNzg7G1E7ywSPfSr6ez2N",
 ];
+
+export const sysvarInstructions = new anchor.web3.PublicKey(
+    anchor.web3.SYSVAR_INSTRUCTIONS_PUBKEY
+);
