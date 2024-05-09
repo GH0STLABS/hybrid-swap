@@ -12,6 +12,8 @@ export const metadataProgram = new anchor.web3.PublicKey(
 );
 
 export const quackMint = "FGHHVjzQe8m3PFcuzmmooDifbXuS16EP3EpEgWaWF5AN";
+export const quackToken = "5GddexuCGfWx1PgQ5tuHXvqqQ1t24Jwv3mPWeSxw73ys"
+export const quackPoolId = "3eAo2MC9aP2vKegioU7SV6tkh134ohHjg3YRJRnvqpXP";
 
 export const WL_KEYS = [
   "3nHNJd8mjZFTVkA2dPTSCnWjzJU3XvC5nGSrDMWNKpQb",
