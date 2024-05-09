@@ -63,5 +63,5 @@ export async function initSponsor(wallet: NodeWallet, metadata: InitPoolArgs) {
 
     await tx.add(instruction);
 
-    return tx
+    return { tx, sponsorPDA };
 }

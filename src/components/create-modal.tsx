@@ -32,7 +32,7 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
 
   async function create() {
     try {
-      const ix = await initSponsor(wallet as NodeWallet, {
+      const res = await initSponsor(wallet as NodeWallet, {
         collectionMint: nft,
         tokenMint: token,
         lamportFee: fee,
@@ -43,8 +43,10 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
         },
       });
 
-      const signature = await sendTransaction(ix, connection);
+      const signature = await sendTransaction(res.tx, connection);
       await connection.confirmTransaction(signature, "confirmed");
+
+      console.log("Pool Created:", res.sponsorPDA.toString());
 
       toast({
         title: "Pool Created!",
@@ -129,11 +131,8 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
             />
           </div>
         </div>
-        <button 
-        className="mb-4 mx-2 btn text-base"
-        onClick={() => create()}
-        >
-            Submit
+        <button className="mb-4 mx-2 btn text-base" onClick={() => create()}>
+          Submit
         </button>
       </DialogContent>
     </Dialog>
