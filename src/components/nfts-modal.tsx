@@ -48,7 +48,7 @@ export default function NFTModal({ open, setOpen, nfts, setNFTs }: NFTModalProps
           </div>
         </DialogHeader>
         {items != null ? (
-          <div className="px-2 pb-4">
+          <div className="px-2 pb-4 grid grid-cols-3">
             {items?.map((item: any, i: number) => (
               <div key={i} onClick={() => setNFTs((prev: any) => [...prev, item])}>
                 <Image
