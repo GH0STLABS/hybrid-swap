@@ -1,7 +1,7 @@
+import { quackMint } from "@/solana/source/consts";
+
 export async function getTokensByOwner(key: string) {
     const url = process.env.NEXT_PUBLIC_HELIUS_ENDPOINT as string;
-  
-    let quackMint = "FGHHVjzQe8m3PFcuzmmooDifbXuS16EP3EpEgWaWF5AN";
   
     const response = await fetch(url, {
         method: 'POST',

@@ -13,6 +13,7 @@ import { calcTokens } from "@/lib/calcTokens";
 import { numberWithCommas } from "@/lib/numberWithCommas";
 import { swapNFT } from "@/lib/swapNFT";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
+import { swapToken } from "@/lib/swapToken";
 
 export default function Home() {
   const { connected, sendTransaction } = useWallet();
@@ -307,12 +308,17 @@ export default function Home() {
                     disabled={disabled}
                     onClick={async () => {
                       if (!mode) {
-                        console.log(items[0].id)
                         await swapNFT(
                           wallet as NodeWallet,
                           sendTransaction,
                           0,
                           items[0].id
+                        )
+                      } else {
+                        await swapToken(
+                          wallet as NodeWallet,
+                          sendTransaction,
+                          amount,
                         )
                       }
                     }}

@@ -25,8 +25,6 @@ export default function NFTModal({ open, setOpen, nfts, setNFTs }: NFTModalProps
       if (connected && publicKey) {
         const result = await getTokensByOwner(publicKey.toString());
 
-        console.log(result);
-
         setItems(result.items);
       }
     };

@@ -22,6 +22,7 @@ import {
 import { findAssociatedTokenPda } from "@metaplex-foundation/mpl-toolbox";
 import { publicKey } from "@metaplex-foundation/umi";
 import { initUmi } from "../source/utils/initUmi";
+import { getRandomTokenId } from "../source/utils/getRandomTokenId";
 
 interface SwapToTokenArgs {
   amount: number;
@@ -56,6 +57,7 @@ export async function swapToToken(
     sponsor,
     true
   );
+
   let payerTokenAccount = spl.getAssociatedTokenAddressSync(
     tokenMintKey,
     wallet.publicKey
@@ -132,6 +134,12 @@ export async function swapToToken(
 
   const nftEdition = findMasterEditionPda(umi, { mint: publicKey(nftMint) });
 
+  /*
+  spl.setAuthority(
+
+  )
+  */
+
   let instruction = await program.methods
     .swapNftToToken()
     .accounts({
@@ -160,7 +168,7 @@ export async function swapToToken(
     .instruction();
 
   const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
-    units: 400_000,
+    units: 210_000,
   });
 
   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({

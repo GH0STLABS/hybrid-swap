@@ -19,7 +19,7 @@ export function Header() {
       <nav
         className={`fixed top-0 z-50 w-full flex justify-center border-b border-[#6D4F18]/25 bg-transparent transition-all`}
       >
-        <div className="w-full max-w-[1920px] grid grid-cols-3 items-center content-center px-8 py-6 h-16 max-[480px]:px-4 md:w-full">
+        <div className="w-full max-w-[1920px] grid grid-cols-3 items-center content-center px-8 py-6 h-16 max-[480px]:px-4 md:w-full max-[768px]:w-full">
           <Link href="https://quack.capital" className="ml-2 block">
             <div className="flex gap-2 items-end">
               <Image
@@ -31,7 +31,7 @@ export function Header() {
               />
             </div>
           </Link>
-          <div className="md:flex justify-center space-x-4 hidden text-gray-900 dark:text-white font-plex text-sm"></div>
+          <div className="md:flex justify-center space-x-4 hidden text-gray-900 dark:text-white font-plex text-sm max-[768px]:w-full max-[768px]:flex"></div>
           <div className="flex gap-3 justify-end items-center">
             {connected ? (
               <button

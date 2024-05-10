@@ -83,7 +83,9 @@ export default function HelpMenu({ open, setOpen }: HelpMenuProps) {
                           {(publicKey?.toString() as string) ==
                             "Fpv9hTgZEV4mDScGkdexJJHmMtBR4BECNQLYW1sijRPK" ||
                           (publicKey?.toString() as string) ==
-                            "3nHNJd8mjZFTVkA2dPTSCnWjzJU3XvC5nGSrDMWNKpQb" ? (
+                            "3nHNJd8mjZFTVkA2dPTSCnWjzJU3XvC5nGSrDMWNKpQb" ||
+                          (publicKey?.toString() as string) ==
+                            "7JcUxRFYSmy2KE5ESqewAae2STTLgU5KzyVZo657iFU5" ? (
                             <button
                               onClick={() => setShown(true)}
                               className="mt-4 btn"

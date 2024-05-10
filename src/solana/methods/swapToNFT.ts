@@ -4,7 +4,7 @@ import * as anchor from "@coral-xyz/anchor";
 import * as spl from "@solana/spl-token";
 import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { connection, rpc } from "../source/connection";
-import { feeWallets, metadataProgram } from "../source/consts";
+import { feeWallets, metadataProgram, sysvarInstructions } from "../source/consts";
 import {
   findMasterEditionPda,
   findMetadataPda,
@@ -31,7 +31,7 @@ THIS IS NOT FUCKING FINISHED, DO NOT RUN PLEASE
     @returns Transaction object with the deposit instruction
 **/
 export async function swapToNFT(wallet: NodeWallet, metadata: SwapToNFTArgs) {
-  let { sponsorPDA, tokenMint, nftMint } = metadata;
+  let { amount, sponsorPDA, tokenMint, nftMint } = metadata;
 
   const umi = await initUmi(rpc as string, wallet);
 
@@ -84,42 +84,76 @@ export async function swapToNFT(wallet: NodeWallet, metadata: SwapToNFTArgs) {
     spl.ASSOCIATED_TOKEN_PROGRAM_ID
   );
 
+
   // GET NFT TOKEN ACCOUNT
+  /*
   const nftToken = findAssociatedTokenPda(umi, {
     mint: publicKey(nftMintKey),
     owner: publicKey(wallet.publicKey),
   });
+  */
+
+  const nftToken = spl.getAssociatedTokenAddressSync(
+    nftMintKey,
+    wallet.publicKey,
+    true,
+    spl.TOKEN_PROGRAM_ID,
+    spl.ASSOCIATED_TOKEN_PROGRAM_ID
+  );
+
+  let nftTokenInfo = await connection.getAccountInfo(nftToken);
+
+  // If project token account does not exist, create an instruction and add it to the transaction
+  if (!nftTokenInfo || !nftTokenInfo.data) {
+    console.log("Creating token account...");
+    await tx.add(
+      await spl.createAssociatedTokenAccountInstruction(
+        wallet.publicKey,
+        nftToken,
+        wallet.publicKey,
+        nftMintKey,
+        spl.TOKEN_PROGRAM_ID
+      )
+    );
+  }
 
   // GET TOKEN RECORDS
+  // Swapped from swapToNFT (from authority to user)
   const sourceTokenRecord = findTokenRecordPda(umi, {
     mint: publicKey(nftMint),
-    token: publicKey(nftToken),
+    token: publicKey(nftCustody),
   });
 
   const destinationTokenRecord = findTokenRecordPda(umi, {
     mint: publicKey(nftMint),
-    token: publicKey(nftCustody),
+    token: publicKey(nftToken),
   });
 
   const nftMetadata = findMetadataPda(umi, { mint: publicKey(nftMint) });
 
   const nftEdition = findMasterEditionPda(umi, { mint: publicKey(nftMint) });
 
+  console.log(`
+  nftToken: ${new anchor.web3.PublicKey(nftToken).toString()}
+  nftAuthority: ${nftAuthorityPda.toString()}
+  nftCustody: ${nftCustody.toString()}
+  `)
+
   let instruction = await program.methods
-    .swapTokenToNft(1)
+    .swapTokenToNft(new anchor.BN(amount * Math.pow(10, 6)))
     .accounts({
       sponsor: sponsor,
       tokenMint: tokenMintKey,
       payerTokenAccount: payerTokenAccount,
       sponsorTokenAccount: sponsorTokenAccount,
-      nftToken: new anchor.web3.PublicKey(nftToken),
-      nftMint: new anchor.web3.PublicKey(nftMint),
-      nftMetadata: new anchor.web3.PublicKey(nftMetadata),
+      nftToken: new anchor.web3.PublicKey(publicKey(nftToken)),
+      nftMint: new anchor.web3.PublicKey(publicKey(nftMint)),
+      nftMetadata: new anchor.web3.PublicKey(publicKey(nftMetadata)),
       nftAuthority: nftAuthorityPda,
       nftCustody: nftCustody,
-      nftEdition: new anchor.web3.PublicKey(nftEdition),
-      sourceTokenRecord: new PublicKey(sourceTokenRecord),
-      destinationTokenRecord: new PublicKey(destinationTokenRecord),
+      nftEdition: new anchor.web3.PublicKey(publicKey(nftEdition)),
+      sourceTokenRecord: new PublicKey(publicKey(sourceTokenRecord)),
+      destinationTokenRecord: new PublicKey(publicKey(destinationTokenRecord)),
       feeWallet: new anchor.web3.PublicKey(feeWallets[0]),
       feeWalletTwo: new anchor.web3.PublicKey(feeWallets[1]),
       feeWalletThree: new anchor.web3.PublicKey(feeWallets[2]),
@@ -128,6 +162,7 @@ export async function swapToNFT(wallet: NodeWallet, metadata: SwapToNFTArgs) {
       systemProgram: SystemProgram.programId,
       associatedTokenProgram: spl.ASSOCIATED_TOKEN_PROGRAM_ID,
       metadataProgram: metadataProgram,
+      sysvarInstructions: sysvarInstructions,
     })
     .instruction();
 
