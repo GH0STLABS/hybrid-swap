@@ -4,11 +4,14 @@ import * as anchor from "@coral-xyz/anchor";
 import * as spl from "@solana/spl-token";
 import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { connection, rpc } from "../source/connection";
-import { feeWallets, metadataProgram, sysvarInstructions } from "../source/consts";
+import { MPL_TOKEN_AUTH_RULES_PROGRAM, feeWallets, metadataProgram, sysvarInstructions } from "../source/consts";
 import {
+  deserializeMetadata,
+  fetchMetadata,
   findMasterEditionPda,
   findMetadataPda,
   findTokenRecordPda,
+  getProgrammableConfigSerializer,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { findAssociatedTokenPda } from "@metaplex-foundation/mpl-toolbox";
 import { publicKey } from "@metaplex-foundation/umi";
@@ -131,6 +134,11 @@ export async function swapToNFT(wallet: NodeWallet, metadata: SwapToNFTArgs) {
 
   const nftMetadata = findMetadataPda(umi, { mint: publicKey(nftMint) });
 
+  const metadataInfo = await fetchMetadata(umi, publicKey(nftMetadata));
+  console.log("Metadata Info:", metadataInfo);
+  //@ts-ignore
+  const ruleSet = metadataInfo.programmableConfig.value.ruleSet.value;
+
   const nftEdition = findMasterEditionPda(umi, { mint: publicKey(nftMint) });
 
   console.log(`
@@ -140,7 +148,7 @@ export async function swapToNFT(wallet: NodeWallet, metadata: SwapToNFTArgs) {
   `)
 
   let instruction = await program.methods
-    .swapTokenToNft(new anchor.BN(amount * Math.pow(10, 6)))
+    .swapTokenToNft()
     .accounts({
       sponsor: sponsor,
       tokenMint: tokenMintKey,
@@ -163,6 +171,8 @@ export async function swapToNFT(wallet: NodeWallet, metadata: SwapToNFTArgs) {
       associatedTokenProgram: spl.ASSOCIATED_TOKEN_PROGRAM_ID,
       metadataProgram: metadataProgram,
       sysvarInstructions: sysvarInstructions,
+      authRulesProgram: MPL_TOKEN_AUTH_RULES_PROGRAM,
+      authRules: new anchor.web3.PublicKey(ruleSet),
     })
     .instruction();
 

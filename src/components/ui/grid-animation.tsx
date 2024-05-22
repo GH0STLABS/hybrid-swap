@@ -62,7 +62,7 @@ const Obj = () => {
             itemSize={3}
           />
         </bufferGeometry>
-        <lineBasicMaterial attach="material" color="#000" />
+        <lineBasicMaterial attach="material" color="#FF64D8" />
       </lineSegments>
     </group>
   );

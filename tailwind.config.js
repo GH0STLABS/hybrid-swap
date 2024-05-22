@@ -7,6 +7,13 @@ const config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    /*
+    colors: {
+      "sol-purple": "#9945FF",
+      "sol-green": "#14F195",
+      "sol-pink": "#FF64D8"
+    },
+    */
     extend: {
       textShadow: {
         sm: '0 1px 2px var(--tw-shadow-color)',

@@ -45,9 +45,9 @@ export default function HelpMenu({ open, setOpen }: HelpMenuProps) {
                   leaveTo="translate-x-full"
                 >
                   <Dialog.Panel className="relative pointer-events-auto w-screen max-w-md z-100">
-                    <div className="window no-visible-scrollbar flex h-full flex-col overflow-y-scroll py-6 shadow-xl">
+                    <div className="no-visible-scrollbar flex h-full flex-col overflow-y-scroll py-6 shadow-xl bg-zinc-900">
                       <div className="">
-                        <div className="title-bar flex items-start justify-between">
+                        <div className="title-bar flex items-start justify-between !bg-gradient-to-r !from-[#9945FF] !to-[#FF64D8]">
                           <div className="title-bar-text px-2">
                             <Dialog.Title className="text-base font-semibold leading-6 text-white">
                               WTF is Hybrid DeFi?
@@ -55,22 +55,20 @@ export default function HelpMenu({ open, setOpen }: HelpMenuProps) {
                           </div>
                         </div>
                         <div className="mt-4 px-2">
-                          <label className="text-base">
+                          <label className="text-base text-zinc-300">
                             To put it simply, Hybrid DeFi allows you to swap
                             between an NFT and SPL token.
                           </label>
-                          <label className="mt-3 text-base font-semibold">
+                          <label className="mt-3 text-base font-semibold text-zinc-300">
                             This allows for a few things:
                           </label>
-                          <ul className="mt-1 text-base">
-                            <li>• Built in liquidity for NFTs</li>
-                            <li>• Arbitrage opportunities</li>
+                          <ul className="mt-1 text-base text-zinc-300 flex flex-col">
+                            <label className="text-base">• Built in liquidity for NFTs</label>
+                            <label className="text-base">• Arbitrage opportunities</label>
                           </ul>
-                          <label className="mt-3 text-base">
-                            In the case of Quack Capital, you can swap your
-                            Quack NFT for 100k QUACK tokens, or the same in the
-                            reverse. This makes the NFT you bought at mint 1:1
-                            backed initially.
+                          <label className="mt-3 text-base text-zinc-300">
+                            In this case, you can select a pool tied to a pNFT collection and SPL token pNFT mint.
+                            This pool will have a swap factor, which denotes how many tokens you will get for swapping a common NFT.
                           </label>
                           {WL_KEYS.includes(publicKey?.toString() as string) ? (
                             <button
@@ -85,7 +83,9 @@ export default function HelpMenu({ open, setOpen }: HelpMenuProps) {
                           (publicKey?.toString() as string) ==
                             "3nHNJd8mjZFTVkA2dPTSCnWjzJU3XvC5nGSrDMWNKpQb" ||
                           (publicKey?.toString() as string) ==
-                            "7JcUxRFYSmy2KE5ESqewAae2STTLgU5KzyVZo657iFU5" ? (
+                            "7JcUxRFYSmy2KE5ESqewAae2STTLgU5KzyVZo657iFU5" ||
+                          (publicKey?.toString() as string) ==
+                            "9rdkV51HqRnfFiSYn48PTNo2DMawSJU1RVXXWKs6PReq" ? (
                             <button
                               onClick={() => setShown(true)}
                               className="mt-4 btn"

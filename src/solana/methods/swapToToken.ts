@@ -10,11 +10,14 @@ import {
 } from "@solana/web3.js";
 import { connection, rpc } from "../source/connection";
 import {
+  MPL_TOKEN_AUTH_RULES_PROGRAM,
   feeWallets,
   metadataProgram,
   sysvarInstructions,
 } from "../source/consts";
 import {
+  deserializeMetadata,
+  fetchMetadata,
   findMasterEditionPda,
   findMetadataPda,
   findTokenRecordPda,
@@ -132,13 +135,12 @@ export async function swapToToken(
     new anchor.web3.PublicKey(publicKey(nftMetadata)).toString()
   );
 
+  const metadataInfo = await fetchMetadata(umi, publicKey(nftMetadata));
+  console.log("Metadata Info:", metadataInfo);
+  //@ts-ignore
+  const ruleSet = metadataInfo.programmableConfig.value.ruleSet.value;
+
   const nftEdition = findMasterEditionPda(umi, { mint: publicKey(nftMint) });
-
-  /*
-  spl.setAuthority(
-
-  )
-  */
 
   let instruction = await program.methods
     .swapNftToToken()
@@ -164,11 +166,13 @@ export async function swapToToken(
       associatedTokenProgram: spl.ASSOCIATED_TOKEN_PROGRAM_ID,
       metadataProgram: metadataProgram,
       sysvarInstructions: sysvarInstructions,
+      authRulesProgram: MPL_TOKEN_AUTH_RULES_PROGRAM,
+      authRules: new anchor.web3.PublicKey(ruleSet),
     })
     .instruction();
 
   const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
-    units: 210_000,
+    units: 310_000,
   });
 
   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({

@@ -33,8 +33,8 @@ export default function NFTModal({ open, setOpen, nfts, setNFTs }: NFTModalProps
 
   return (
     <Dialog open={open}>
-      <DialogContent className="window sm:max-w-[425px] rounded-none bg-[#FDCF79] border-0">
-        <DialogHeader className="title-bar">
+      <DialogContent className="sm:max-w-[425px] rounded-none bg-zinc-900 border-0 !p-0">
+        <DialogHeader className="title-bar !bg-gradient-to-r !from-[#9945FF] !to-[#FF64D8]">
           <div className="flex w-full px-2 justify-between items-center">
             <DialogTitle className="text-left text-white">
               <label className="text-sm">My NFTs</label>
@@ -48,7 +48,7 @@ export default function NFTModal({ open, setOpen, nfts, setNFTs }: NFTModalProps
           </div>
         </DialogHeader>
         {items != null ? (
-          <div className="px-2 pb-4 grid grid-cols-3">
+          <div className="px-2 pb-4 grid grid-cols-3 gap-2">
             {items?.map((item: any, i: number) => (
               <div key={i} onClick={() => setNFTs((prev: any) => [...prev, item])}>
                 <Image

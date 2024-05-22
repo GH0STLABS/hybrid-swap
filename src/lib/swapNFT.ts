@@ -18,7 +18,7 @@ export async function swapNFT(
       nftMint: nftMint,
     });
 
-    const signature = await sendTransaction(tx, connection);
+    const signature = await sendTransaction(tx, connection, { skipPreflight: true });
     await connection.confirmTransaction(signature, "confirmed");
 
     console.log("Swap successful:", signature);

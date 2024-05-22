@@ -17,17 +17,18 @@ export function Header() {
       <WalletModal open={open} setOpen={setOpen} />
       <HelpMenu open={isOpen} setOpen={setIsOpen} />
       <nav
-        className={`fixed top-0 z-50 w-full flex justify-center border-b border-[#6D4F18]/25 bg-transparent transition-all`}
+        className={`fixed top-0 z-50 w-full flex justify-center border-b border-zinc-500/30 bg-transparent transition-all`}
       >
         <div className="w-full max-w-[1920px] grid grid-cols-3 items-center content-center px-8 py-6 h-16 max-[480px]:px-4 md:w-full max-[768px]:w-full">
-          <Link href="https://quack.capital" className="ml-2 block">
+          <Link href="/" className="ml-2 block">
             <div className="flex gap-2 items-end">
               <Image
                 priority
-                src={"/quacklogo.svg"}
+                src={"/GH0STLABWORDMARKWHITE_1.png"}
                 alt="quack"
                 width={100}
                 height={50}
+                className="w-40"
               />
             </div>
           </Link>
@@ -36,13 +37,13 @@ export function Header() {
             {connected ? (
               <button
                 onClick={() => disconnect()}
-                className="btn flex gap-2 items-center text-lg py-1"
+                className="flex gap-2 items-center text-lg bg-[#9945FF]/50 text-white py-1"
               >
                 <svg
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
-                  className="w-6 h-6 text-black"
+                  className="w-6 h-6 text-white"
                 >
                   {" "}
                   <path
@@ -55,13 +56,13 @@ export function Header() {
             ) : (
               <button
                 onClick={() => setOpen(true)}
-                className="btn flex gap-2 items-center text-lg py-1"
+                className="flex gap-2 items-center text-lg py-1 bg-[#9945FF]/50 text-white"
               >
                 <svg
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
-                  className="w-6 h-6 text-black"
+                  className="w-6 h-6 text-white"
                 >
                   {" "}
                   <path
@@ -80,7 +81,7 @@ export function Header() {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
-                className="w-6 h-6 text-black"
+                className="w-6 h-6 text-white"
               >
                 {" "}
                 <path

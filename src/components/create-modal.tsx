@@ -43,7 +43,7 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
         },
       });
 
-      const signature = await sendTransaction(res.tx, connection);
+      const signature = await sendTransaction(res.tx, connection, { skipPreflight: true });
       await connection.confirmTransaction(signature, "confirmed");
 
       console.log("Pool Created:", res.sponsorPDA.toString());

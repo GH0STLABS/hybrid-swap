@@ -26,8 +26,8 @@ export default function WalletModal({ open, setOpen }: ReferralModalProps) {
 
   return (
     <Dialog open={open}>
-      <DialogContent className="window sm:max-w-[425px] rounded-none bg-[#FDCF79] border-0">
-        <DialogHeader className="title-bar">
+      <DialogContent className="sm:max-w-[425px] rounded-none bg-zinc-900 border-0 !p-0">
+        <DialogHeader className="title-bar !bg-gradient-to-r !from-[#9945FF] !to-[#FF64D8]">
           <div className="flex w-full px-2 justify-between items-center">
             <DialogTitle className="text-left text-white">
               <label className="text-sm">Connect Wallet</label>
@@ -43,7 +43,7 @@ export default function WalletModal({ open, setOpen }: ReferralModalProps) {
         {wallets.filter((wallet) => wallet.readyState === "Installed").length >
         0 ? (
           <>
-            <label className="px-3 text-lg">
+            <label className="px-3 text-lg text-zinc-200">
               Please connect a wallet to continue.
             </label>
             <div className="flex-col space-y-1 pb-4">
@@ -51,9 +51,9 @@ export default function WalletModal({ open, setOpen }: ReferralModalProps) {
                 .filter((wallet) => wallet.readyState === "Installed")
                 .map((wallet, i) => (
                   <div key={i} className="w-full px-2">
-                    <button
+                    <div
                       onClick={() => select(wallet.adapter.name)}
-                      className="btn w-full flex gap-2 items-center px-2 py-2"
+                      className="w-full flex gap-2 items-center px-2 py-2 bg-zinc-800 hover:bg-zinc-700"
                     >
                       <Image
                         src={wallet.adapter.icon}
@@ -62,10 +62,10 @@ export default function WalletModal({ open, setOpen }: ReferralModalProps) {
                         height={50}
                         className="w-8 h-8"
                       />
-                      <label className="text-lg font-medium">
+                      <label className="text-lg font-medium text-zinc-300">
                         {wallet.adapter.name}
                       </label>
-                    </button>
+                    </div>
                   </div>
                 ))}
             </div>
