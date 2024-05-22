@@ -9,7 +9,7 @@ interface DepositArgs {
     amount: number,
     sponsorPDA: string,
     tokenMint: string,
-    collectionMint: string
+    collectionMint: string,
 }
 
 /**
@@ -44,7 +44,7 @@ export async function deposit(wallet: NodeWallet, metadata: DepositArgs) {
             spl.TOKEN_PROGRAM_ID,
             spl.ASSOCIATED_TOKEN_PROGRAM_ID
         ));
-    }
+    };
 
     let instruction = await program.methods.depositTokens(
         new anchor.BN(amount * Math.pow(10, 9))

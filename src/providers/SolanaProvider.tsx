@@ -11,9 +11,10 @@ import {
   TorusWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import React, { useMemo } from "react";
-import { Cluster } from "@solana/web3.js";
 
-export const DEFAULT_ENDPOINT = `https://rpc.ironforge.network/${process.env.NEXT_PUBLIC_SOLANA_ENVIRONMENT}?apiKey=${process.env.NEXT_PUBLIC_IRONFORGE_API_KEY}`;
+export const rpc = process.env.NEXT_PUBLIC_HELIUS_ENDPOINT;
+
+export const DEFAULT_ENDPOINT = rpc as string;
 
 // Default styles that can be overridden by your app
 require("@solana/wallet-adapter-react-ui/styles.css");

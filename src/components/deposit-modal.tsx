@@ -34,17 +34,19 @@ export default function DepositModal({ open, setOpen }: DepositModalProps) {
           description: "Initial deposit must be more than 0",
         });
 
+      console.log("Depositing...");
       const tx = await deposit(wallet as NodeWallet, {
         amount: amount,
         sponsorPDA: quackPoolId,
         tokenMint: quackToken,
         collectionMint: quackMint,
       });
-
-      const signature = await sendTransaction(tx, connection);
+      
+      console.log("Sending...");
+      const signature = await sendTransaction(tx, connection, { skipPreflight: true });
       await connection.confirmTransaction(signature, "confirmed");
 
-      console.log("Depsoit successful:", signature);
+      console.log("Deposit successful:", signature);
 
       toast({
         title: "Tokens Deposited!",
