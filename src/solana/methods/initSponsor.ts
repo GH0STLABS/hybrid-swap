@@ -29,7 +29,7 @@ export async function initSponsor(wallet: NodeWallet, metadata: InitPoolArgs) {
     let collectionMintKey = new PublicKey(collectionMint);
     let tokenMintKey = new PublicKey(tokenMint);
 
-    let swap_factor = factors.baseline * Math.pow(10, 6);
+    let swap_factor = factors.baseline * Math.pow(10, 9);
 
     const [sponsorPDA] = anchor.web3.PublicKey.findProgramAddressSync(
         [

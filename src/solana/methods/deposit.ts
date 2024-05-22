@@ -47,7 +47,7 @@ export async function deposit(wallet: NodeWallet, metadata: DepositArgs) {
     }
 
     let instruction = await program.methods.depositTokens(
-        new anchor.BN(amount * Math.pow(10, 6))
+        new anchor.BN(amount * Math.pow(10, 9))
     ).accounts({
         hybridVault: sponsor,
         tokenMint: tokenMintKey,
