@@ -10,20 +10,27 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 interface NFTModalProps {
+  mint: string,
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  nfts: any[],
+  nfts: any[];
   setNFTs: React.Dispatch<React.SetStateAction<any>>;
 }
 
-export default function NFTModal({ open, setOpen, nfts, setNFTs }: NFTModalProps) {
+export default function NFTModal({
+  mint,
+  open,
+  setOpen,
+  nfts,
+  setNFTs,
+}: NFTModalProps) {
   const { publicKey, connected } = useWallet();
   const [items, setItems] = useState<any>(null);
 
   useEffect(() => {
     const getNFTs = async () => {
       if (connected && publicKey) {
-        const result = await getTokensByOwner(publicKey.toString());
+        const result = await getTokensByOwner(mint, publicKey.toString());
 
         setItems(result.items);
       }
@@ -50,13 +57,21 @@ export default function NFTModal({ open, setOpen, nfts, setNFTs }: NFTModalProps
         {items != null ? (
           <div className="px-2 pb-4 grid grid-cols-3 gap-2">
             {items?.map((item: any, i: number) => (
-              <div key={i} onClick={() => setNFTs((prev: any) => [...prev, item])}>
+              <div
+                key={i}
+                onClick={() => {
+                  setNFTs((prev: any) => [...prev, item]);
+                  setOpen(false);
+                }}
+              >
                 <Image
                   src={item.content.links.image}
                   alt=""
                   width={80}
                   height={80}
-                  className={`shadow-lg hover:border-2 hover:border-blue-500 ${nfts.includes(item) ? "border-3 border-yellow-800" : null}`}
+                  className={`shadow-lg hover:border-2 hover:border-blue-500 ${
+                    nfts.includes(item) ? "border-3 border-yellow-800" : null
+                  }`}
                 />
               </div>
             ))}

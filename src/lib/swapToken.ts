@@ -1,7 +1,6 @@
 import { toast } from "@/components/ui/use-toast";
 import { swapToNFT } from "@/solana/methods/swapToNFT";
 import { connection } from "@/solana/source/connection";
-import { quackPoolId, quackToken } from "@/solana/source/consts";
 import { getRandomTokenId } from "@/solana/source/utils/getRandomTokenId";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 
@@ -9,14 +8,19 @@ export async function swapToken(
   wallet: NodeWallet,
   sendTransaction: any,
   amount: number,
+  args: {
+    tokenMint: string,
+    nftMint: string,
+    poolId: string
+  }
 ) {
   try {
-    let randomId = await getRandomTokenId(wallet, quackPoolId);
+    let randomId = await getRandomTokenId(wallet, args.poolId, args.nftMint);
 
     const tx = await swapToNFT(wallet, {
       amount: amount,
-      sponsorPDA: quackPoolId,
-      tokenMint: quackToken,
+      sponsorPDA: args.poolId,
+      tokenMint: args.tokenMint,
       nftMint: randomId,
     });
 

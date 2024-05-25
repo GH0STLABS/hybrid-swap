@@ -46,8 +46,12 @@ export async function deposit(wallet: NodeWallet, metadata: DepositArgs) {
         ));
     };
 
+    let tokenInfo = await connection.getParsedAccountInfo(new PublicKey(tokenMint));
+    //@ts-ignore
+    let decmials = tokenInfo?.value?.data.parsed.info.decimals;
+
     let instruction = await program.methods.depositTokens(
-        new anchor.BN(amount * Math.pow(10, 9))
+        new anchor.BN(amount * Math.pow(10, decmials))
     ).accounts({
         hybridVault: sponsor,
         tokenMint: tokenMintKey,

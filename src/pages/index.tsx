@@ -44,7 +44,10 @@ export default function Home() {
               {items?.map((item: any, i: number) => (
                 <Link key={i} href={`/swap/${item.publicKey.toString()}`} passHref>
                   <div className="bg-zinc-900 p-4 flex-col hover:bg-zinc-700">
-                    <label className="flex gap-1 items-center text-white text-lg font-bold">
+                  <label className="flex gap-1 items-center text-white text-lg font-bold">
+                      {item.account.name}
+                    </label>
+                    <label className="flex gap-1 items-center text-white text-base">
                       {item.publicKey.toString().slice(0, 4) +
                         "..." +
                         item.publicKey.toString().slice(40, 44)}

@@ -24,10 +24,6 @@ interface SwapToNFTArgs {
   nftMint: string;
 }
 
-/*
-THIS IS NOT FUCKING FINISHED, DO NOT RUN PLEASE
-*/
-
 /**
     -- This method swaps an NFT for tokens, denoted by the first index of the swap factor --
     @params Wallet as "NodeWallet" type, metadata with "DepositArgs" type

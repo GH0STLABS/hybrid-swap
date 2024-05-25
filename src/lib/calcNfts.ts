@@ -1,4 +1,3 @@
-export function calcNfts(tokens: number): number {
-    const tokensPerNFT = 100000;
-    return Math.floor(tokens / tokensPerNFT);
+export function calcNfts(factor: number, decimals: number, tokens: number): number {
+    return Math.floor(tokens / Math.pow(10, decimals) / factor);
 }

@@ -38,6 +38,10 @@ export type Tritium = {
       ],
       "args": [
         {
+          "name": "name",
+          "type": "string"
+        },
+        {
           "name": "swapFactor",
           "type": {
             "array": [
@@ -357,6 +361,10 @@ export type Tritium = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
           {
             "name": "authority",
             "type": "publicKey"
@@ -471,6 +479,10 @@ export const IDL: Tritium = {
       ],
       "args": [
         {
+          "name": "name",
+          "type": "string"
+        },
+        {
           "name": "swapFactor",
           "type": {
             "array": [
@@ -790,6 +802,10 @@ export const IDL: Tritium = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
           {
             "name": "authority",
             "type": "publicKey"

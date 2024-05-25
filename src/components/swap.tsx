@@ -2,7 +2,7 @@ import { calcNfts } from "@/lib/calcNfts";
 import { calcTokens } from "@/lib/calcTokens";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WalletModal from "./wallet-modal";
 import NFTModal from "./nfts-modal";
 import Image from "next/image";
@@ -10,24 +10,34 @@ import { numberWithCommas } from "@/lib/numberWithCommas";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import { swapNFT } from "@/lib/swapNFT";
 import { swapToken } from "@/lib/swapToken";
+import { SwapProps } from "@/pages/swap/[id]";
+import base58 from "bs58";
+import { VersionedTransaction } from "@solana/web3.js";
+import { base64, bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 
-export default function SwapFrame() {
+export default function SwapFrame({ id, config, token, nft }: SwapProps) {
   const { connected, sendTransaction } = useWallet();
   const wallet = useAnchorWallet();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<number>(config.baseline);
   const [mode, setMode] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(false);
   const [items, setItems] = useState<any>([]);
 
-  let nfts = calcNfts(amount);
-  let tokens = calcTokens(items.length);
+  let nfts = calcNfts(config.baseline, token.decimals, amount);
+  let tokens = calcTokens(
+    config,
+    items[0]?.content?.metadata.symbol as string | undefined,
+    token.decimals,
+    items.length
+  );
 
   return (
     <>
       <WalletModal open={open} setOpen={setOpen} />
       <NFTModal
+        mint={nft.mint}
         open={isOpen}
         setOpen={setIsOpen}
         nfts={items}
@@ -67,24 +77,21 @@ export default function SwapFrame() {
                 <div className="p-3">
                   <div className="flex gap-2 items-center">
                     <Image
-                      src="/quacklogo.jpeg"
+                      src={token.image}
                       alt=""
                       width={30}
                       height={30}
                       className="rounded-full"
                     />
-                    <input
-                      defaultValue={amount}
-                      onChange={(e) => setAmount(parseInt(e.target.value))}
-                      className="text-lg pl-2 border border-zinc-500/50 bg-zinc-800 text-white"
-                    />
-                    <label className="text-base font-medium text-white">
-                      SILLY
+                    <label className="text-lg font-medium text-white">
+                      {numberWithCommas(
+                        config.baseline / Math.pow(10, token.decimals)
+                      )}
+                    </label>
+                    <label className="text-lg font-medium text-white">
+                      {token.symbol}
                     </label>
                   </div>
-                  <label className="mt-1 pl-9 text-[9px] text-zinc-300">
-                    • 100k SILLY = 1 NFT
-                  </label>
                 </div>
               </div>
             </motion.div>
@@ -113,14 +120,14 @@ export default function SwapFrame() {
                       fill="currentColor"
                     />{" "}
                   </svg>
-                  <label>Select Your SILLY NFTs</label>
+                  <label>Select Your NFT</label>
                 </div>
               </div>
               <div className="window-body !p-0">
                 <div className="flex gap-2 items-center justify-center p-3">
                   {items.length > 0 ? (
                     <div className="flex-col justify-center w-full">
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className="flex gap-2 justify-center items-center">
                         {items?.map((item: any, i: number) => (
                           <div key={i}>
                             <Image
@@ -136,19 +143,13 @@ export default function SwapFrame() {
                           </div>
                         ))}
                       </div>
-                      <button
-                        onClick={() => setIsOpen(true)}
-                        className="mt-2 bg-[#14F195]"
-                      >
-                        Select Your NFTs
-                      </button>
                     </div>
                   ) : (
                     <button
                       onClick={() => setIsOpen(true)}
                       className="bg-[#FF64D8]/50 text-white"
                     >
-                      Select Your NFTs
+                      Select Your NFT
                     </button>
                   )}
                 </div>
@@ -213,35 +214,21 @@ export default function SwapFrame() {
               </div>
               <div className="window-body !p-0">
                 <div className="p-3">
-                  {isNaN(nfts) || nfts == 0 ? (
-                    <div className="flex gap-2 items-center justify-center">
-                      <Image
-                        src="/duck_dancing.gif"
-                        alt=""
-                        width={80}
-                        height={80}
-                      />
-                      <label className="text-lg text-white">
-                        Insufficient SILLY
-                      </label>
-                    </div>
-                  ) : (
                     <div className="flex gap-2 items-center">
                       <Image
-                        src="/hardhatquack.png"
+                        src={token.image}
                         alt=""
                         width={30}
                         height={30}
                         className="rounded-full"
                       />
                       <label className="text-[#FF64D8] font-semibold text-lg">
-                        {nfts}
+                        1
                       </label>
                       <label className="text-lg text-white">
-                        SILLY NFT{nfts > 1 && "s"}
+                        NFT{nfts > 1 && "s"}
                       </label>
                     </div>
-                  )}
                 </div>
               </div>
             </motion.div>
@@ -277,14 +264,14 @@ export default function SwapFrame() {
                 <div className="p-3">
                   <div className="flex gap-2 items-center">
                     <Image
-                      src="/quacklogo.jpeg"
+                      src={token.image}
                       alt=""
                       width={30}
                       height={30}
                       className="rounded-full"
                     />
                     <label className="text-xl text-white">
-                      {numberWithCommas(tokens)} SILLY
+                      {numberWithCommas(tokens)} {token.symbol}
                     </label>
                   </div>
                 </div>
@@ -306,19 +293,23 @@ export default function SwapFrame() {
                 disabled={disabled}
                 onClick={async () => {
                   if (!mode) {
-                    await swapNFT(
-                      wallet as NodeWallet,
-                      sendTransaction,
-                      0,
-                      items[0].id
-                    );
-                    
-                    setItems([])
+                    await swapNFT(wallet as NodeWallet, sendTransaction, 0, {
+                      nftMint: items[0].id,
+                      tokenMint: token.mint,
+                      poolId: id,
+                    });
+
+                    setItems([]);
                   } else {
                     await swapToken(
                       wallet as NodeWallet,
                       sendTransaction,
-                      amount
+                      amount,
+                      {
+                        tokenMint: token.mint,
+                        nftMint: nft.mint,
+                        poolId: id,
+                      }
                     );
                   }
                 }}

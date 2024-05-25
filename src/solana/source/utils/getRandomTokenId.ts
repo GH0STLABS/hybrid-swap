@@ -3,13 +3,13 @@ import * as anchor from "@coral-xyz/anchor";
 import { getProgram } from "../program";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 
-export async function getRandomTokenId(wallet: NodeWallet, sponsor: string) {
+export async function getRandomTokenId(wallet: NodeWallet, sponsor: string, nftMint: string) {
   try {
     const program = await getProgram(wallet);
     const url = process.env.NEXT_PUBLIC_HELIUS_ENDPOINT as string;
 
     const [nftAuthorityPda] = anchor.web3.PublicKey.findProgramAddressSync(
-        [anchor.utils.bytes.utf8.encode("nft_authority"), new anchor.web3.PublicKey(quackPoolId).toBuffer()],
+        [anchor.utils.bytes.utf8.encode("nft_authority"), new anchor.web3.PublicKey(sponsor).toBuffer()],
         program.programId
       );
 
@@ -26,7 +26,7 @@ export async function getRandomTokenId(wallet: NodeWallet, sponsor: string) {
         method: "searchAssets",
         params: {
           ownerAddress: nftAuthorityPda.toString(),
-          grouping: ["collection", quackMint],
+          grouping: ["collection", nftMint],
           page: 1,
           limit: 10,
         },

@@ -172,7 +172,7 @@ export async function swapToToken(
     .instruction();
 
   const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
-    units: 310_000,
+    units: 400_000,
   });
 
   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({

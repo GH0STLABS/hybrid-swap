@@ -6,9 +6,7 @@ import {
 } from "@/components/ui/dialog";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useToast } from "./ui/use-toast";
-import { PublicKey, Transaction } from "@solana/web3.js";
 import { initSponsor } from "@/solana/methods/initSponsor";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import { connection } from "@/solana/source/connection";
@@ -33,8 +31,9 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
   async function create() {
     try {
       const res = await initSponsor(wallet as NodeWallet, {
-        collectionMint: nft,
-        tokenMint: token,
+        name: name,
+        collectionMint: nft.trim(),
+        tokenMint: token.trim(),
         lamportFee: fee,
         factors: {
           baseline,

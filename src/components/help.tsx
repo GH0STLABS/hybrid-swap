@@ -4,6 +4,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WL_KEYS } from "@/solana/source/consts";
 import CreateModal from "./create-modal";
 import DepositModal from "./deposit-modal";
+import { useRouter } from "next/router";
 
 interface HelpMenuProps {
   open: boolean;
@@ -14,6 +15,7 @@ export default function HelpMenu({ open, setOpen }: HelpMenuProps) {
   const { publicKey } = useWallet();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [shown, setShown] = useState<boolean>(false);
+
   return (
     <>
       <CreateModal open={isOpen} setOpen={setIsOpen} />

@@ -1,6 +1,6 @@
 import { quackMint } from "@/solana/source/consts";
 
-export async function getTokensByOwner(key: string) {
+export async function getTokensByOwner(mint: string, key: string) {
     const url = process.env.NEXT_PUBLIC_HELIUS_ENDPOINT as string;
   
     const response = await fetch(url, {
@@ -14,7 +14,7 @@ export async function getTokensByOwner(key: string) {
           method: 'searchAssets',
           params: {
             ownerAddress: key,
-            grouping: ["collection", quackMint],
+            grouping: ["collection", mint],
             page: 1,
             limit: 10
           },

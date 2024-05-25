@@ -10,7 +10,8 @@ const nextConfig = {
       'arweave.net',
       'i.imgur.com',
       'quackassets.pages.dev',
-      'shdw-drive.genesysgo.net'
+      'shdw-drive.genesysgo.net',
+      'gateway.irys.xyz'
     ]
   }
 };

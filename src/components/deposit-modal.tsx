@@ -5,15 +5,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import { useToast } from "./ui/use-toast";
-import { PublicKey, Transaction } from "@solana/web3.js";
-import { initSponsor } from "@/solana/methods/initSponsor";
+import { PublicKey } from "@solana/web3.js";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import { connection } from "@/solana/source/connection";
 import { deposit } from "@/solana/methods/deposit";
-import { quackMint, quackPoolId, quackToken } from "@/solana/source/consts";
+import { BorshAccountsCoder } from "@coral-xyz/anchor";
+import { IDL } from "@/solana/idl/idl";
+import { useRouter } from "next/router";
 
 interface DepositModalProps {
   open: boolean;
@@ -21,6 +21,7 @@ interface DepositModalProps {
 }
 
 export default function DepositModal({ open, setOpen }: DepositModalProps) {
+  const router = useRouter();
   const { toast } = useToast();
   const { sendTransaction } = useWallet();
   const wallet = useAnchorWallet();
@@ -34,16 +35,23 @@ export default function DepositModal({ open, setOpen }: DepositModalProps) {
           description: "Initial deposit must be more than 0",
         });
 
+      let info = await connection.getAccountInfo(new PublicKey(router.query.id as string));
+
+      let coder = new BorshAccountsCoder(IDL);
+      let deser = coder.decode("sponsor", info?.data as Buffer);
+
       console.log("Depositing...");
       const tx = await deposit(wallet as NodeWallet, {
         amount: amount,
-        sponsorPDA: quackPoolId,
-        tokenMint: quackToken,
-        collectionMint: quackMint,
+        sponsorPDA: router.query.id as string,
+        tokenMint: deser.tokenMint.toString(),
+        collectionMint: deser.nftMint.toString(),
       });
-      
+
       console.log("Sending...");
-      const signature = await sendTransaction(tx, connection, { skipPreflight: true });
+      const signature = await sendTransaction(tx, connection, {
+        skipPreflight: true,
+      });
       await connection.confirmTransaction(signature, "confirmed");
 
       console.log("Deposit successful:", signature);
