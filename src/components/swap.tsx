@@ -11,11 +11,8 @@ import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import { swapNFT } from "@/lib/swapNFT";
 import { swapToken } from "@/lib/swapToken";
 import { SwapProps } from "@/pages/swap/[id]";
-import base58 from "bs58";
-import { VersionedTransaction } from "@solana/web3.js";
-import { base64, bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 
-export default function SwapFrame({ id, config, token, nft }: SwapProps) {
+export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
   const { connected, sendTransaction } = useWallet();
   const wallet = useAnchorWallet();
   const [isOpen, setIsOpen] = useState<boolean>(false);

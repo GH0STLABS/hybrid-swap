@@ -7,6 +7,7 @@ import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { getProgram } from "@/solana/source/program";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import Link from "next/link";
+import SEO from "@/components/SEO";
 
 export default function Home() {
   const wallet = useAnchorWallet();
@@ -17,8 +18,6 @@ export default function Home() {
     const fetchAccounts = async () => {
       if (program) {
         const accounts = await program.account.sponsor.all();
-
-        console.log(accounts);
         setItems(accounts as any);
       }
     };
@@ -27,6 +26,11 @@ export default function Home() {
 
   return (
     <>
+      <SEO
+        title="Hybrid DeFi by Gh0st Labs"
+        description="Swap SPL-404 Enabled tokens with the Gh0st Labs Hybrid DeFi portal."
+        image="/ghostlabscover.png"
+      />
       <Header />
       <main
         className={`relative flex min-h-screen flex-col items-center justify-center`}
@@ -42,9 +46,13 @@ export default function Home() {
           {items.length > 0 ? (
             <div className="mt-12 max-w-7xl mx-auto grid grid-cols-3 gap-4">
               {items?.map((item: any, i: number) => (
-                <Link key={i} href={`/swap/${item.publicKey.toString()}`} passHref>
+                <Link
+                  key={i}
+                  href={`/swap/${item.publicKey.toString()}`}
+                  passHref
+                >
                   <div className="bg-zinc-900 p-4 flex-col hover:bg-zinc-700">
-                  <label className="flex gap-1 items-center text-white text-lg font-bold">
+                    <label className="flex gap-1 items-center text-white text-lg font-bold">
                       {item.account.name}
                     </label>
                     <label className="flex gap-1 items-center text-white text-base">
