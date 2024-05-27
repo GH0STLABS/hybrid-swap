@@ -67,6 +67,7 @@ export async function swapToToken(
   );
 
   let tokenAccountInfo = await connection.getAccountInfo(sponsorTokenAccount);
+  let payerTokenAccountInfo = await connection.getAccountInfo(payerTokenAccount);
 
   // If project token account does not exist, create an instruction and add it to the transaction
   if (!tokenAccountInfo || !tokenAccountInfo.data) {
@@ -76,6 +77,19 @@ export async function swapToToken(
         wallet.publicKey,
         sponsorTokenAccount,
         sponsor,
+        tokenMintKey,
+        spl.TOKEN_PROGRAM_ID
+      )
+    );
+  }
+
+  if (!payerTokenAccountInfo || !payerTokenAccountInfo.data) {
+    console.log("Creating token account...");
+    await tx.add(
+      await spl.createAssociatedTokenAccountInstruction(
+        wallet.publicKey,
+        payerTokenAccount,
+        wallet.publicKey,
         tokenMintKey,
         spl.TOKEN_PROGRAM_ID
       )
@@ -172,7 +186,7 @@ export async function swapToToken(
     .instruction();
 
   const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
-    units: 400_000,
+    units: 410_000,
   });
 
   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
