@@ -8,6 +8,9 @@ import { getProgram } from "@/solana/source/program";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import Link from "next/link";
 import SEO from "@/components/SEO";
+import { connection } from "@/solana/source/connection";
+import { Metaplex } from "@metaplex-foundation/js";
+import Image from "next/image";
 
 export default function Home() {
   const wallet = useAnchorWallet();
@@ -18,7 +21,34 @@ export default function Home() {
     const fetchAccounts = async () => {
       if (program) {
         const accounts = await program.account.sponsor.all();
-        setItems(accounts as any);
+
+        const metaplex = new Metaplex(connection);
+
+        let accs = await Promise.all(
+          accounts.map(async (acc) => {
+            let tokenMetadata = await metaplex
+              .nfts()
+              .findByMint({ mintAddress: acc.account.tokenMint });
+
+            let tokenInfo = await connection.getParsedAccountInfo(
+              acc.account.tokenMint
+            );
+            //@ts-ignore
+            let decimals = tokenInfo?.value?.data.parsed.info.decimals;
+
+            let uri = await fetch(tokenMetadata.uri);
+            let tokenJson = await uri.json();
+            return {
+              publicKey: acc.publicKey,
+              account: acc.account,
+              tokenDecimals: decimals,
+              tokenSymbol: tokenMetadata.symbol,
+              tokenImage: tokenJson.image,
+            };
+          })
+        );
+
+        setItems(accs as any);
       }
     };
     fetchAccounts();
@@ -45,48 +75,56 @@ export default function Home() {
           </div>
           {items.length > 0 ? (
             <div className="mt-12 max-w-7xl mx-auto grid grid-cols-3 gap-4">
-              {items?.map((item: any, i: number) => (
-                <Link
-                  key={i}
-                  href={`/swap/${item.publicKey.toString()}`}
-                  passHref
-                >
-                  <div className="bg-zinc-900 p-4 flex-col hover:bg-zinc-700">
-                    <label className="flex gap-1 items-center text-white text-lg font-bold">
-                      {item.account.name}
-                    </label>
-                    <label className="flex gap-1 items-center text-white text-base">
-                      {item.publicKey.toString().slice(0, 4) +
-                        "..." +
-                        item.publicKey.toString().slice(40, 44)}
-                    </label>
-                    <div className="grid grid-cols-1">
-                      <label className="flex gap-1 items-center text-white font-semibold">
-                        Collection:
-                        <span className="font-light">
-                          {item.account.nftMint.toString().slice(0, 4) +
-                            "..." +
-                            item.publicKey.toString().slice(40, 44)}
-                        </span>
-                      </label>
-                      <label className="flex gap-1 items-center text-white font-semibold">
-                        Token:
-                        <span className="font-light">
-                          {item.account.tokenMint.toString().slice(0, 4) +
-                            "..." +
-                            item.publicKey.toString().slice(40, 44)}
-                        </span>
-                      </label>
-                      <label className="flex gap-1 items-center text-white font-semibold">
-                        Swap Factor:
-                        <span className="font-light">
-                          {item.account.swapFactor[0]}
-                        </span>
-                      </label>
+              {items?.map((item: any, i: number) => {
+                return (
+                  <Link
+                    key={i}
+                    href={`/swap/${item.publicKey.toString()}`}
+                    passHref
+                  >
+                    <div className="bg-zinc-900 p-4 flex-col hover:bg-zinc-700">
+                      <div className="mb-1 flex gap-2 items-center">
+                        <Image
+                          src={item.tokenImage}
+                          alt=""
+                          width={25}
+                          height={25}
+                          className="rounded-lg"
+                        />
+                        <label className="flex gap-1 items-center text-white text-lg font-bold">
+                          {item.account.name}
+                        </label>
+                      </div>
+                      <div className="grid grid-cols-1">
+                        <label className="flex gap-1 items-center text-white font-semibold">
+                          Collection:
+                          <span className="font-light">
+                            {item.account.nftMint.toString().slice(0, 4) +
+                              "..." +
+                              item.publicKey.toString().slice(40, 44)}
+                          </span>
+                        </label>
+                        <label className="flex gap-1 items-center text-white font-semibold">
+                          Token:
+                          <span className="font-light">
+                            {item.account.tokenMint.toString().slice(0, 4) +
+                              "..." +
+                              item.publicKey.toString().slice(40, 44)}
+                          </span>
+                        </label>
+                        <label className="flex gap-1 items-center text-white font-semibold">
+                          Swap Factor:
+                          <span className="font-light">
+                            {item.account.swapFactor[0] /
+                              Math.pow(10, item.tokenDecimals)}{" "}
+                            {item.tokenSymbol}
+                          </span>
+                        </label>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           ) : null}
           <div className="absolute -z-50 w-full bottom-0 h-3/4">
