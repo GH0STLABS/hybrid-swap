@@ -127,11 +127,6 @@ export async function swapToToken(
     spl.ASSOCIATED_TOKEN_PROGRAM_ID
   );
 
-  console.log(
-    "NFT Token",
-    new anchor.web3.PublicKey(publicKey(nftToken)).toString()
-  );
-
   // GET TOKEN RECORDS
   const sourceTokenRecord = findTokenRecordPda(umi, {
     mint: publicKey(nftMint),
@@ -144,13 +139,8 @@ export async function swapToToken(
   });
 
   const nftMetadata = findMetadataPda(umi, { mint: publicKey(nftMint) });
-  console.log(
-    "NFT Metadata",
-    new anchor.web3.PublicKey(publicKey(nftMetadata)).toString()
-  );
 
   const metadataInfo = await fetchMetadata(umi, publicKey(nftMetadata));
-  console.log("Metadata Info:", metadataInfo);
   //@ts-ignore
   const ruleSet = metadataInfo.programmableConfig.value.ruleSet.value;
 

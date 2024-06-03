@@ -13,8 +13,6 @@ export async function getRandomTokenId(wallet: NodeWallet, sponsor: string, nftM
         program.programId
       );
 
-      console.log(nftAuthorityPda.toString());
-
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -35,8 +33,6 @@ export async function getRandomTokenId(wallet: NodeWallet, sponsor: string, nftM
 
     const { result } = await response.json();
 
-    console.log(result)
-
     if (!result || result.items.length <= 0) throw new Error("No NFTs found.");
 
     // Loop through result, parse for nft grouping
@@ -44,7 +40,7 @@ export async function getRandomTokenId(wallet: NodeWallet, sponsor: string, nftM
 
     const randomIndex = Math.floor(Math.random() * len);
 
-    return result.items[randomIndex].id;
+    return { id: result.items[randomIndex].id, info: result.items[randomIndex] };
   } catch (err) {
     throw err;
   }

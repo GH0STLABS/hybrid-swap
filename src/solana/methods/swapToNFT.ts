@@ -131,17 +131,11 @@ export async function swapToNFT(wallet: NodeWallet, metadata: SwapToNFTArgs) {
   const nftMetadata = findMetadataPda(umi, { mint: publicKey(nftMint) });
 
   const metadataInfo = await fetchMetadata(umi, publicKey(nftMetadata));
-  console.log("Metadata Info:", metadataInfo);
+
   //@ts-ignore
   const ruleSet = metadataInfo.programmableConfig.value.ruleSet.value;
 
   const nftEdition = findMasterEditionPda(umi, { mint: publicKey(nftMint) });
-
-  console.log(`
-  nftToken: ${new anchor.web3.PublicKey(nftToken).toString()}
-  nftAuthority: ${nftAuthorityPda.toString()}
-  nftCustody: ${nftCustody.toString()}
-  `)
 
   let instruction = await program.methods
     .swapTokenToNft()

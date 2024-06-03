@@ -21,6 +21,7 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
   const [mode, setMode] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(false);
   const [items, setItems] = useState<any>([]);
+  const [rarity, setRarity] = useState<string>("PCA");
 
   let nfts = calcNfts(config.baseline, token.decimals, amount);
   let tokens = calcTokens(
@@ -82,7 +83,12 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
                     />
                     <label className="text-lg font-medium text-white">
                       {numberWithCommas(
-                        config.baseline / Math.pow(10, token.decimals)
+                        calcTokens(
+                          config,
+                          rarity,
+                          token.decimals,
+                          1
+                        )
                       )}
                     </label>
                     <label className="text-lg font-medium text-white">
@@ -302,6 +308,7 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
                       wallet as NodeWallet,
                       sendTransaction,
                       amount,
+                      setRarity,
                       {
                         tokenMint: token.mint,
                         nftMint: nft.mint,
