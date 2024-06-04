@@ -11,16 +11,19 @@ export async function swapToken(
   amount: number,
   setRarity: React.Dispatch<SetStateAction<string>>,
   args: {
-    tokenMint: string,
-    nftMint: string,
-    poolId: string
+    tokenMint: string;
+    nftMint: string;
+    poolId: string;
   }
 ) {
   try {
-    let { id, info } = await getRandomTokenId(wallet, args.poolId, args.nftMint);
+    let { id, info } = await getRandomTokenId(
+      wallet,
+      args.poolId,
+      args.nftMint
+    );
 
     setRarity(info.content.metadata.symbol);
-    console.log(id)
 
     const tx = await swapToNFT(wallet, {
       amount: amount,
@@ -29,15 +32,25 @@ export async function swapToken(
       nftMint: id,
     });
 
-    const signature = await sendTransaction(tx, connection, { skipPreflight: true });
-    await connection.confirmTransaction(signature, "confirmed");
+    const signature = await sendTransaction(tx, connection);
+    const block = await connection.getLatestBlockhash("confirmed");
+    console.log("Confirming...");
+    const result = await connection.confirmTransaction(
+      {
+        signature,
+        ...block,
+      },
+      "confirmed"
+    );
+
+    const error = result.value.err;
+    if (error) {
+      throw Error(error.toString());
+    }
 
     console.log("Swap successful:", signature);
 
-    toast({
-      title: "Tokens Swapped!",
-      description: "You've successfully swapped your tokens.",
-    });
+    return signature;
   } catch (err) {
     throw err;
   }

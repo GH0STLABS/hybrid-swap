@@ -8,9 +8,9 @@ export async function swapNFT(
   sendTransaction: any,
   amount: number,
   args: {
-    nftMint: string,
-    tokenMint: string,
-    poolId: string
+    nftMint: string;
+    tokenMint: string;
+    poolId: string;
   }
 ) {
   try {
@@ -21,15 +21,25 @@ export async function swapNFT(
       nftMint: args.nftMint,
     });
 
-    const signature = await sendTransaction(tx, connection, { skipPreflight: true });
-    await connection.confirmTransaction(signature, "confirmed");
+    const signature = await sendTransaction(tx, connection);
+    const block = await connection.getLatestBlockhash("confirmed");
+    console.log("Confirming...");
+    const result = await connection.confirmTransaction(
+      {
+        signature,
+        ...block,
+      },
+      "confirmed"
+    );
+
+    const error = result.value.err;
+    if (error) {
+      throw Error(error.toString());
+    }
 
     console.log("Swap successful:", signature);
 
-    toast({
-      title: "NFT Swapped!",
-      description: "You've successfully swapped your NFT.",
-    });
+    return signature;
   } catch (err) {
     throw err;
   }
