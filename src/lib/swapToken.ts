@@ -1,9 +1,9 @@
-import { toast } from "@/components/ui/use-toast";
 import { swapToNFT } from "@/solana/methods/swapToNFT";
 import { connection } from "@/solana/source/connection";
 import { getRandomTokenId } from "@/solana/source/utils/getRandomTokenId";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import React, { SetStateAction } from "react";
+import { toast } from "sonner";
 
 export async function swapToken(
   wallet: NodeWallet,
@@ -50,7 +50,22 @@ export async function swapToken(
 
     console.log("Swap successful:", signature);
 
-    return signature;
+    const slice = info.content.metadata.symbol.slice(1, 2);
+
+    const rarity =
+      slice == "C"
+        ? "Common"
+        : slice == "R"
+        ? "Rare"
+        : slice == "L"
+        ? "Legendary"
+        : slice == "X"
+        ? "X"
+        : slice == "Y"
+        ? "Y"
+        : "Z";
+
+    return { signature: signature, rarity: rarity };
   } catch (err) {
     throw err;
   }

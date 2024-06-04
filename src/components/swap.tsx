@@ -326,7 +326,18 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
                           return (
                             <div className="flex gap-2 items-center justify-between">
                               <div className="flex gap-2 items-center">
-                                <CheckIcon color="green" className="w-5 h-5" />
+                                <svg
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  className="w-5 h-5 text-green-500"
+                                >
+                                  {" "}
+                                  <path
+                                    d="M15 6h2v2h-2V6zm-2 4V8h2v2h-2zm-2 2v-2h2v2h-2zm-2 2v-2h2v2H9zm-2 2v-2h2v2H7zm-2 0h2v2H5v-2zm-2-2h2v2H3v-2zm0 0H1v-2h2v2zm8 2h2v2h-2v-2zm4-2v2h-2v-2h2zm2-2v2h-2v-2h2zm2-2v2h-2v-2h2zm2-2h-2v2h2V8zm0 0h2V6h-2v2z"
+                                    fill="currentColor"
+                                  />{" "}
+                                </svg>
                                 <label className="text-lg">
                                   Successfully Swapped!
                                 </label>
@@ -346,7 +357,18 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
                         },
                         error: (err) => (
                           <div className="flex gap-2 items-center">
-                            <StopIcon color="red" className="w-5 h-5" />
+                            <svg
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              className="w-5 h-5 text-red-500"
+                            >
+                              {" "}
+                              <path
+                                d="M6 4h14v2h2v6h-8v2h6v2h-4v2h-2v2H2V8h2V6h2V4zm2 6h2V8H8v2z"
+                                fill="currentColor"
+                              />{" "}
+                            </svg>
                             <label className="text-sm">{err.toString()}</label>
                           </div>
                         ),
@@ -390,16 +412,49 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
                           </div>
                         ),
                         success: (data) => {
+                          toast(
+                            <div className="flex gap-2 items-center">
+                              <svg
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                className="w-5 h-5 text-yellow-500"
+                              >
+                                {" "}
+                                <path
+                                  d="M16 3H6v2H2v10h6V5h8v10h6V5h-4V3h-2zm4 4v6h-2V7h2zM6 13H4V7h2v6zm12 2H6v2h12v-2zm-7 2h2v2h3v2H8v-2h3v-2z"
+                                  fill="currentColor"
+                                />{" "}
+                              </svg>
+                              <label className="text-lg">
+                                You pulled a {data.rarity}!
+                              </label>
+                            </div>,
+                            {
+                              duration: 5000,
+                            }
+                          );
                           return (
                             <div className="flex gap-2 items-center justify-between">
                               <div className="flex gap-2 items-center">
-                                <CheckIcon color="green" className="w-5 h-5" />
+                                <svg
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  className="w-5 h-5 text-green-500"
+                                >
+                                  {" "}
+                                  <path
+                                    d="M15 6h2v2h-2V6zm-2 4V8h2v2h-2zm-2 2v-2h2v2h-2zm-2 2v-2h2v2H9zm-2 2v-2h2v2H7zm-2 0h2v2H5v-2zm-2-2h2v2H3v-2zm0 0H1v-2h2v2zm8 2h2v2h-2v-2zm4-2v2h-2v-2h2zm2-2v2h-2v-2h2zm2-2v2h-2v-2h2zm2-2h-2v2h2V8zm0 0h2V6h-2v2z"
+                                    fill="currentColor"
+                                  />{" "}
+                                </svg>
                                 <label className="text-lg">
                                   Successfully Swapped!
                                 </label>
                               </div>
                               <Link
-                                href={`https://solscan.io/tx/${data}`}
+                                href={`https://solscan.io/tx/${data.signature}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 passHref
@@ -413,7 +468,18 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
                         },
                         error: (err) => (
                           <div className="flex gap-2 items-center">
-                            <StopIcon color="red" className="w-5 h-5" />
+                            <svg
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              className="w-5 h-5 text-red-500"
+                            >
+                              {" "}
+                              <path
+                                d="M6 4h14v2h2v6h-8v2h6v2h-4v2h-2v2H2V8h2V6h2V4zm2 6h2V8H8v2z"
+                                fill="currentColor"
+                              />{" "}
+                            </svg>
                             <label className="text-sm">{err.toString()}</label>
                           </div>
                         ),

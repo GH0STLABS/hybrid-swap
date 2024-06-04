@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SolanaProviders>
-      <Toaster />
+      <Toaster expand={true} />
       <Component {...pageProps} />
     </SolanaProviders>
   );
