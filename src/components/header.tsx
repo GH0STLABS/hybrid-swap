@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useWallet } from "@solana/wallet-adapter-react";
 import WalletModal from "./wallet-modal";
 import HelpMenu from "./help";
+import { IconDotsVertical, IconLogout, IconWallet } from "@tabler/icons-react";
 
 export function Header() {
   const router = useRouter();
@@ -37,39 +38,17 @@ export function Header() {
             {connected ? (
               <button
                 onClick={() => disconnect()}
-                className="flex gap-2 items-center text-lg bg-[#9945FF]/50 text-white py-1"
+                className="flex gap-2 items-center text-lg bg-[#FF64D8] rounded-md text-white py-1 px-2"
               >
-                <svg
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-6 h-6 text-white"
-                >
-                  {" "}
-                  <path
-                    d="M5 3h16v4h-2V5H5v14h14v-2h2v4H3V3h2zm16 8h-2V9h-2V7h-2v2h2v2H7v2h10v2h-2v2h2v-2h2v-2h2v-2z"
-                    fill="currentColor"
-                  />{" "}
-                </svg>
+                <IconLogout className="w-6 h-6 text-white" />
                 Disconnect
               </button>
             ) : (
               <button
                 onClick={() => setOpen(true)}
-                className="flex gap-2 items-center text-lg py-1 bg-[#9945FF]/50 text-white"
+                className="flex gap-2 w-fit items-center text-lg py-1 px-2 rounded-md bg-[#FF64D8] text-white"
               >
-                <svg
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-6 h-6 text-white"
-                >
-                  {" "}
-                  <path
-                    d="M18 3H2v18h18v-4h2V7h-2V3h-2zm0 14v2H4V5h14v2h-8v10h8zm2-2h-8V9h8v6zm-4-4h-2v2h2v-2z"
-                    fill="currentColor"
-                  />{" "}
-                </svg>
+                <IconWallet className="w-6 h-6 text-white" />
                 Connect Wallet
               </button>
             )}
@@ -77,18 +56,7 @@ export function Header() {
               onClick={() => setIsOpen(true)}
               className="p-2 w-fit hover:bg-zinc-500/50"
             >
-              <svg
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="w-6 h-6 text-white"
-              >
-                {" "}
-                <path
-                  d="M15 1v6H9V1h6zm-2 2h-2v2h2V3zm2 6v6H9V9h6zm-2 2h-2v2h2v-2zm2 6v6H9v-6h6zm-2 2h-2v2h2v-2z"
-                  fill="currentColor"
-                />{" "}
-              </svg>
+              <IconDotsVertical className="w-6 h-6 text-white" />
             </div>
           </div>
         </div>

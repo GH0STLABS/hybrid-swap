@@ -8,6 +8,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { useToast } from "./ui/use-toast";
+import { IconWallet, IconX } from "@tabler/icons-react";
 
 interface ReferralModalProps {
   open: boolean;
@@ -26,24 +27,24 @@ export default function WalletModal({ open, setOpen }: ReferralModalProps) {
 
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-[425px] rounded-none bg-zinc-900 border-0 !p-0">
-        <DialogHeader className="title-bar !bg-gradient-to-r !from-[#9945FF] !to-[#FF64D8]">
+      <DialogContent className="sm:max-w-[425px] bg-zinc-900 rounded-lg border-0 !p-0">
+        <DialogHeader className="title-bar py-1 !bg-gradient-to-r !from-[#9945FF] !to-[#FF64D8] rounded-t-lg">
           <div className="flex w-full px-2 justify-between items-center">
-            <DialogTitle className="text-left text-white">
-              <label className="text-sm">Connect Wallet</label>
-            </DialogTitle>
-            <div className="title-bar-controls">
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Close"
-              ></button>
+            <div className="flex gap-1 items-center">
+              <IconWallet className="w-5 h-5 text-white" />
+              <DialogTitle className="text-left text-white">
+                <label className="text-sm">Connect Wallet</label>
+              </DialogTitle>
             </div>
+            <button onClick={() => setOpen(false)} aria-label="Close">
+              <IconX className="w-4 h-4 text-white" />
+            </button>
           </div>
         </DialogHeader>
         {wallets.filter((wallet) => wallet.readyState === "Installed").length >
         0 ? (
           <>
-            <label className="px-3 text-lg text-zinc-200">
+            <label className="px-3 text-base text-zinc-400">
               Please connect a wallet to continue.
             </label>
             <div className="flex-col space-y-1 pb-4">
@@ -53,7 +54,7 @@ export default function WalletModal({ open, setOpen }: ReferralModalProps) {
                   <div key={i} className="w-full px-2">
                     <div
                       onClick={() => select(wallet.adapter.name)}
-                      className="w-full flex gap-2 items-center px-2 py-2 bg-zinc-800 hover:bg-zinc-700"
+                      className="w-full flex gap-2 items-center px-2 py-2 rounded-md shadow-xl bg-zinc-800 hover:bg-zinc-700"
                     >
                       <Image
                         src={wallet.adapter.icon}
