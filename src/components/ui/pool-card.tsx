@@ -7,6 +7,12 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./tooltip";
 
 interface PoolCardProps {
   pubkey: string;
@@ -66,14 +72,23 @@ export default function PoolCard({
           rel="noopener noreferrer"
           passHref
         >
-          <div className="flex gap-1 items-center bg-zinc-800 w-fit rounded-md px-2.5 py-1 shadow-xl">
-            <IconPhotoScan className="w-5 h-5 text-zinc-400" />
-            <label className="text-zinc-400 font-medium text-sm">
-              <span className="font-light">
-                {nftMint.slice(0, 4) + "..." + nftMint.slice(40, 44)}
-              </span>
-            </label>
-          </div>
+          <TooltipProvider>
+            <Tooltip delayDuration={500}>
+              <TooltipTrigger>
+                <div className="flex gap-1 items-center bg-zinc-800 w-fit rounded-md px-2.5 py-1 shadow-xl">
+                  <IconPhotoScan className="w-5 h-5 text-zinc-400" />
+                  <label className="text-zinc-400 font-medium text-sm">
+                    <span className="font-light">
+                      {nftMint.slice(0, 4) + "..." + nftMint.slice(40, 44)}
+                    </span>
+                  </label>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <label>NFT</label>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </Link>
         <Link
           href={`https://solscan.io/token/${tokenMint}`}
@@ -81,23 +96,41 @@ export default function PoolCard({
           rel="noopener noreferrer"
           passHref
         >
-          <div className="flex gap-1 items-center bg-zinc-800 w-fit rounded-md px-2.5 py-1 shadow-xl">
-            <IconCoin className="w-5 h-5 text-zinc-400" />
-            <label className="text-zinc-400 font-medium text-sm">
-              <span className="font-light">
-                {tokenMint.slice(0, 4) + "..." + tokenMint.slice(40, 44)}
-              </span>
-            </label>
-          </div>
+          <TooltipProvider>
+            <Tooltip delayDuration={500}>
+              <TooltipTrigger>
+                <div className="flex gap-1 items-center bg-zinc-800 w-fit rounded-md px-2.5 py-1 shadow-xl">
+                  <IconCoin className="w-5 h-5 text-zinc-400" />
+                  <label className="text-zinc-400 font-medium text-sm">
+                    <span className="font-light">
+                      {tokenMint.slice(0, 4) + "..." + tokenMint.slice(40, 44)}
+                    </span>
+                  </label>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <label>Token</label>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </Link>
-        <div className="flex gap-1 items-center bg-zinc-800 w-fit rounded-md px-2.5 py-1 shadow-xl">
-          <IconSwitchHorizontal className="w-5 h-5 text-zinc-400" />
-          <label className="text-zinc-400 font-medium text-sm">
-            <span className="font-light">
-              {factor / Math.pow(10, decimals)} {symbol}
-            </span>
-          </label>
-        </div>
+        <TooltipProvider>
+          <Tooltip delayDuration={500}>
+            <TooltipTrigger>
+              <div className="flex gap-1 items-center bg-zinc-800 w-fit rounded-md px-2.5 py-1 shadow-xl">
+                <IconSwitchHorizontal className="w-5 h-5 text-zinc-400" />
+                <label className="text-zinc-400 font-medium text-sm">
+                  <span className="font-light">
+                    {factor / Math.pow(10, decimals)} {symbol}
+                  </span>
+                </label>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <label>Base Swap Price</label>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </motion.div>
   );

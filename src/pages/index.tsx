@@ -12,6 +12,8 @@ import { connection } from "@/solana/source/connection";
 import { Metaplex } from "@metaplex-foundation/js";
 import Image from "next/image";
 import PoolCard from "@/components/ui/pool-card";
+import { BackgroundBeams } from "@/components/ui/background-beams";
+import { WavyBackground } from "@/components/ui/gradient-wave";
 
 export default function Home() {
   const wallet = useAnchorWallet();
@@ -63,43 +65,42 @@ export default function Home() {
         image="/ghostlabscover.png"
       />
       <Header />
-      <main
-        className={`relative flex min-h-screen flex-col items-center justify-center`}
-      >
-        <div className="w-full mx-auto h-screen overflow-hidden">
-          <div className="mt-36 w-full flex flex-col space-y-3 justify-center items-center">
-            <label className="text-6xl bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 font-bold">
-              Explore Swap Pools
-            </label>
-            <label className="text-lg text-zinc-500">
-              View hybrid swap pools across a variety of SPL tokens and pNFT
-              collections
-            </label>
-          </div>
-          {items.length > 0 ? (
-            <div className="mt-12 max-w-7xl mx-auto grid grid-cols-3 gap-2">
-              {items?.map((item: any, i: number) => {
-                return (
-                  <PoolCard
-                    key={i}
-                    pubkey={item.publicKey.toString()}
-                    name={item.account.name}
-                    image={item.tokenImage}
-                    nftMint={item.account.nftMint.toString()}
-                    tokenMint={item.account.tokenMint.toString()}
-                    factor={item.account.swapFactor[0]}
-                    decimals={item.tokenDecimals}
-                    symbol={item.tokenSymbol}
-                  />
-                );
-              })}
+      <WavyBackground className="w-full mx-auto">
+        <main
+          className={`relative flex min-h-screen flex-col items-center justify-center`}
+        >
+          <div className="relative w-full mx-auto h-screen overflow-hidden">
+            <div className="mt-36 w-full flex flex-col space-y-3 justify-center items-center">
+              <label className="text-6xl bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 font-bold">
+                Explore Swap Pools
+              </label>
+              <label className="text-lg text-zinc-500">
+                View hybrid swap pools across a variety of SPL tokens and pNFT
+                collections
+              </label>
             </div>
-          ) : null}
-          <div className="absolute -z-50 w-full bottom-0 h-3/4">
-            <SynthwaveScene />
+            {items.length > 0 ? (
+              <div className="mt-12 max-w-7xl mx-auto grid grid-cols-3 gap-2 max-[1200px]:grid-cols-2 max-[1200px]:px-24 max-[768px]:px-12 max-[768px]:grid-cols-1">
+                {items?.map((item: any, i: number) => {
+                  return (
+                    <PoolCard
+                      key={i}
+                      pubkey={item.publicKey.toString()}
+                      name={item.account.name}
+                      image={item.tokenImage}
+                      nftMint={item.account.nftMint.toString()}
+                      tokenMint={item.account.tokenMint.toString()}
+                      factor={item.account.swapFactor[0]}
+                      decimals={item.tokenDecimals}
+                      symbol={item.tokenSymbol}
+                    />
+                  );
+                })}
+              </div>
+            ) : null}
           </div>
-        </div>
-      </main>
+        </main>
+      </WavyBackground>
     </>
   );
 }
