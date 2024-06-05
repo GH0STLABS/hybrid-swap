@@ -72,19 +72,10 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
             <div className="w-[22rem] bg-zinc-800 shadow-lg rounded-md p-1 transition-all">
               <div className="bg-zinc-700 py-1 px-2 rounded-md w-fit">
                 <div className="pointer-events-none flex gap-1 items-center">
-                  <svg
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    className="w-5 h-5 text-zinc-400"
-                  >
-                    {" "}
-                    <path
-                      d="M6 2h12v2H6V2zM4 6V4h2v2H4zm0 12V6H2v12h2zm2 2v-2H4v2h2zm12 0v2H6v-2h12zm2-2v2h-2v-2h2zm0-12h2v12h-2V6zm0 0V4h-2v2h2zm-9-1h2v2h3v2h-6v2h6v6h-3v2h-2v-2H8v-2h6v-2H8V7h3V5z"
-                      fill="currentColor"
-                    />{" "}
-                  </svg>
-                  <label className="text-zinc-400 text-sm">You Pay:</label>
+                  <IconCoin className="w-5 h-5 text-zinc-400" />
+                  <label className="text-zinc-400 pointer-events-none text-sm">
+                    You Pay:
+                  </label>
                 </div>
               </div>
               <div className="mt-2 window-body !p-0">
@@ -114,7 +105,9 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
               <div className="bg-zinc-700 py-1 px-2 rounded-md w-fit">
                 <div className="title-bar-text pointer-events-none flex gap-1 items-center">
                   <IconPhotoScan className="w-5 h-5 text-zinc-400" />
-                  <label className="text-zinc-400 text-sm">You Send:</label>
+                  <label className="text-zinc-400 text-sm pointer-events-none">
+                    You Send:
+                  </label>
                 </div>
               </div>
               <div className="window-body !p-0">
@@ -140,7 +133,17 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
                     </div>
                   ) : (
                     <button
-                      onClick={() => setIsOpen(true)}
+                      onClick={() => {
+                        if (!connected) {
+                          toast(
+                            <ErrorToast
+                              err={new Error("Please connect a wallet.")}
+                            />
+                          );
+                          return;
+                        }
+                        setIsOpen(true);
+                      }}
                       className="flex gap-2 items-center py-1 px-2 bg-[#FF64D8] text-white rounded-md text-sm"
                     >
                       <IconSelect className="w-4 h-4 text-white" />
@@ -166,7 +169,7 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
               <div className="bg-zinc-700 py-1 px-2 rounded-md w-fit">
                 <div className="title-bar-text pointer-events-none flex gap-1 items-center">
                   <IconPhotoScan className="w-5 h-5 text-zinc-400" />
-                  <label className="text-zinc-400 text-sm">You Get:</label>
+                  <label className="text-zinc-400 pointer-events-none text-sm">You Get:</label>
                 </div>
               </div>
               <div className="window-body !p-0">
@@ -192,7 +195,7 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
               <div className="bg-zinc-700 py-1 px-2 rounded-md w-fit">
                 <div className="title-bar-text pointer-events-none flex gap-1 items-center">
                   <IconCoin className="w-5 h-5 text-zinc-400" />
-                  <label className="text-zinc-400 text-sm">You Get:</label>
+                  <label className="text-zinc-400 pointer-events-none text-sm">You Get:</label>
                 </div>
               </div>
               <div className="window-body !p-0">
@@ -226,7 +229,7 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
                             err={new Error("Please select an NFT.")}
                           />
                         );
-                        return
+                        return;
                       }
 
                       await toast.promise(

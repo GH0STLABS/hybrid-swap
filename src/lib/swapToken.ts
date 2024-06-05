@@ -60,10 +60,10 @@ export async function swapToken(
         : slice == "L"
         ? "Legendary"
         : slice == "X"
-        ? "X"
+        ? "Mythic"
         : slice == "Y"
-        ? "Y"
-        : "Z";
+        ? "Exotic"
+        : "Unreal";
 
     return { signature: signature, rarity: rarity };
   } catch (err) {
