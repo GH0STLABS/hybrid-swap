@@ -32,7 +32,6 @@ export default function NFTModal({
     const getNFTs = async () => {
       if (connected && publicKey) {
         const result = await getTokensByOwner(mint, publicKey.toString());
-
         setItems(result.items);
       }
     };
@@ -41,7 +40,7 @@ export default function NFTModal({
 
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-[425px] bg-zinc-900 rounded-lg border-0 !p-0">
+      <DialogContent className="w-fit bg-zinc-900 rounded-lg border-0 !p-0">
         <DialogHeader className="title-bar py-1 !bg-gradient-to-r !from-[#9945FF] !to-[#FF64D8] rounded-t-lg">
           <div className="flex w-full px-2 justify-between items-center">
             <div className="flex gap-1 items-center">
@@ -72,12 +71,15 @@ export default function NFTModal({
                       alt=""
                       width={80}
                       height={80}
-                      className={`rounded-md shadow-xl hover:border-2 hover:border-blue-500 ${
+                      className={`w-32 rounded-md shadow-xl hover:border-2 hover:border-[#FF64D8] ${
                         nfts.includes(item)
                           ? "border-3 border-yellow-800"
                           : null
                       }`}
                     />
+                    <div className="mt-0.5 w-full flex justify-center">
+                    <label className="text-zinc-400 text-xs mx-auto font-light">{item.content.metadata.name}</label>
+                    </div>
                   </div>
                 ))}
               </div>
