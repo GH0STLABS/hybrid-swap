@@ -27,6 +27,7 @@ import SuccessToast from "./ui/success-toast";
 import LoadingToast from "./ui/loading-toast";
 import ErrorToast from "./ui/error-toast";
 import RarityToast from "./ui/rarity-toast";
+import ConfettiExplosion from "react-confetti-explosion";
 
 export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
   const { connected, sendTransaction } = useWallet();
@@ -38,6 +39,7 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
   const [disabled, setDisabled] = useState<boolean>(false);
   const [items, setItems] = useState<any>([]);
   const [rarity, setRarity] = useState<string>("PCA");
+  const [explosion, setExposion] = useState<boolean>(false);
 
   let nfts = calcNfts(config.baseline, token.decimals, amount);
   let tokens = calcTokens(
@@ -169,7 +171,9 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
               <div className="bg-zinc-700 py-1 px-2 rounded-md w-fit">
                 <div className="title-bar-text pointer-events-none flex gap-1 items-center">
                   <IconPhotoScan className="w-5 h-5 text-zinc-400" />
-                  <label className="text-zinc-400 pointer-events-none text-sm">You Get:</label>
+                  <label className="text-zinc-400 pointer-events-none text-sm">
+                    You Get:
+                  </label>
                 </div>
               </div>
               <div className="window-body !p-0">
@@ -195,7 +199,9 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
               <div className="bg-zinc-700 py-1 px-2 rounded-md w-fit">
                 <div className="title-bar-text pointer-events-none flex gap-1 items-center">
                   <IconCoin className="w-5 h-5 text-zinc-400" />
-                  <label className="text-zinc-400 pointer-events-none text-sm">You Get:</label>
+                  <label className="text-zinc-400 pointer-events-none text-sm">
+                    You Get:
+                  </label>
                 </div>
               </div>
               <div className="window-body !p-0">
@@ -263,6 +269,16 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
                         {
                           loading: <LoadingToast />,
                           success: (data) => {
+
+                            data.rarity == "Legendary" 
+                            ? setExposion(true)
+                            : data.rarity == "Mythic"
+                            ? setExposion(true) 
+                            : data.rarity == "Exotic"
+                            ? setExposion(true) 
+                            : data.rarity == "Unreal"
+                            && setExposion(true);
+
                             toast(<RarityToast rarity={data.rarity} />, {
                               duration: 5000,
                             });
@@ -280,6 +296,19 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
               </>
             ) : (
               <ConnectButton />
+            )}
+            {explosion && (
+              <ConfettiExplosion
+                force={0.8}
+                duration={3000}
+                particleCount={250}
+                width={1600}
+                colors={[
+                  "#31e4cf",
+                  "#FF64D8"
+                ]}
+                onComplete={() => setExposion(false)}
+              />
             )}
           </div>
         </div>
