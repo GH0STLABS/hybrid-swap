@@ -68,7 +68,7 @@ export default function Home() {
       >
         <div className="w-full mx-auto h-screen overflow-hidden">
           <div className="mt-36 w-full flex flex-col space-y-3 justify-center items-center">
-            <label className="text-6xl text-white font-bold">
+            <label className="text-6xl bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 font-bold">
               Explore Swap Pools
             </label>
             <label className="text-lg text-zinc-500">

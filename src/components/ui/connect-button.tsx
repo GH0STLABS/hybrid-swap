@@ -31,7 +31,7 @@ export default function ConnectButton() {
             ></path>
           </svg>
         </div>
-        <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-[#FF64D8]/90 to-[#FF64D8]/0 transition-opacity duration-500 group-hover:opacity-40"></span>
+        <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-[#FF64D8]-400/0 via-[#FF64D8]/90 to-[#FF64D8]/0 transition-opacity duration-500 group-hover:opacity-40"></span>
       </button>
     </>
   );

@@ -58,14 +58,14 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
         setNFTs={setItems}
       />
       <motion.div
-        initial={{ opacity: 0.5, y: 100 }}
+        initial={{ opacity: 0.25, y: 0 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{
           delay: 0.3,
           duration: 0.8,
           ease: "easeInOut",
         }}
-        className="z-50 mt-32 bg-zinc-900 py-3 px-2 rounded-lg w-fit mx-auto flex flex-col items-center justify-center"
+        className="z-50 bg-zinc-900 py-3 px-2 rounded-lg w-fit mx-auto flex flex-col items-center justify-center"
       >
         <div className="flex-col space-y-4 items-center justify-center">
           {mode ? (

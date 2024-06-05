@@ -8,6 +8,7 @@ import { BorshAccountsCoder } from "@coral-xyz/anchor";
 import { IDL } from "@/solana/idl/idl";
 import { Metaplex } from "@metaplex-foundation/js";
 import SEO from "@/components/SEO";
+import { WavyBackground } from "@/components/ui/gradient-wave";
 
 export interface SwapProps {
   id: string;
@@ -82,16 +83,21 @@ export default function Swap({ id, name, config, token, nft }: SwapProps) {
         image="/ghostlabscover.png"
       />
       <Header />
-      <main
-        className={`relative flex min-h-screen flex-col items-center justify-center`}
-      >
-        <div className="w-full mx-auto h-screen overflow-hidden">
-          <SwapFrame id={id} name={name} config={config} token={token} nft={nft} />
-          <div className="absolute -z-50 w-full bottom-0 h-3/4">
-            <SynthwaveScene />
+      <WavyBackground className="w-full mx-auto">
+        <main
+          className={`relative flex min-h-screen flex-col items-center justify-center`}
+        >
+          <div className="z-50 w-full h-full mx-auto overflow-hidden">
+            <SwapFrame
+              id={id}
+              name={name}
+              config={config}
+              token={token}
+              nft={nft}
+            />
           </div>
-        </div>
-      </main>
+        </main>
+      </WavyBackground>
     </>
   );
 }
