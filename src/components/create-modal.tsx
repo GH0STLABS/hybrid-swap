@@ -10,6 +10,7 @@ import { useToast } from "./ui/use-toast";
 import { initSponsor } from "@/solana/methods/initSponsor";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import { connection } from "@/solana/source/connection";
+import { IconX } from "@tabler/icons-react";
 
 interface CreateModalProps {
   open: boolean;
@@ -42,7 +43,9 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
         },
       });
 
-      const signature = await sendTransaction(res.tx, connection, { skipPreflight: true });
+      const signature = await sendTransaction(res.tx, connection, {
+        skipPreflight: true,
+      });
       await connection.confirmTransaction(signature, "confirmed");
 
       console.log("Pool Created:", res.sponsorPDA.toString());
@@ -58,23 +61,20 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
 
   return (
     <Dialog open={open}>
-      <DialogContent className="window z-[150] sm:max-w-[425px] rounded-none bg-[#FDCF79] border-0">
+      <DialogContent className="window z-[150] sm:max-w-[425px] rounded-none bg-zinc-900 border-0">
         <DialogHeader className="title-bar">
           <div className="flex w-full px-2 justify-between items-center">
             <DialogTitle className="text-left text-white">
-              <label className="text-sm">Create Swap Pool</label>
+              <label className="text-xl">Create Swap Pool</label>
             </DialogTitle>
-            <div className="title-bar-controls">
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Close"
-              ></button>
-            </div>
+            <button onClick={() => setOpen(false)} aria-label="Close">
+              <IconX className="w-4 h-4 text-white" />
+            </button>
           </div>
         </DialogHeader>
         <div className="w-full flex-col space-y-2 px-2 pb-4">
           <div className="w-full grid space-y-1">
-            <label className="text-base">Name</label>
+            <label className="text-base text-zinc-300">Name</label>
             <input
               type="text"
               defaultValue={name}
@@ -82,7 +82,7 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
             />
           </div>
           <div className="w-full grid space-y-1">
-            <label className="text-base">SPL Token Mint</label>
+            <label className="text-base text-zinc-300">SPL Token Mint</label>
             <input
               type="text"
               defaultValue={token}
@@ -90,7 +90,7 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
             />
           </div>
           <div className="w-full grid space-y-1">
-            <label className="text-base">pNFT Collection Mint</label>
+            <label className="text-base text-zinc-300">pNFT Collection Mint</label>
             <input
               type="text"
               defaultValue={nft}
@@ -98,7 +98,7 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
             />
           </div>
           <div className="w-full grid space-y-1">
-            <label className="text-base">Fee (in Lamports)</label>
+            <label className="text-base text-zinc-300">Fee (in Lamports)</label>
             <input
               type="number"
               defaultValue={fee}
@@ -106,7 +106,7 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
             />
           </div>
           <div className="w-full grid space-y-1">
-            <label className="text-base">Swap Baseline</label>
+            <label className="text-base text-zinc-300">Swap Baseline</label>
             <input
               type="number"
               defaultValue={baseline}
@@ -114,7 +114,7 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
             />
           </div>
           <div className="w-full grid space-y-1">
-            <label className="text-base">Rare Multiplier</label>
+            <label className="text-base text-zinc-300">Rare Multiplier</label>
             <input
               type="number"
               defaultValue={rare}
@@ -122,7 +122,7 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
             />
           </div>
           <div className="w-full grid space-y-1">
-            <label className="text-base">Legendary Multiplier</label>
+            <label className="text-base text-zinc-300">Legendary Multiplier</label>
             <input
               type="number"
               defaultValue={legend}
@@ -130,7 +130,7 @@ export default function CreateModal({ open, setOpen }: CreateModalProps) {
             />
           </div>
         </div>
-        <button className="mb-4 mx-2 btn text-base" onClick={() => create()}>
+        <button className="mb-4 mx-2 btn text-base text-white" onClick={() => create()}>
           Submit
         </button>
       </DialogContent>

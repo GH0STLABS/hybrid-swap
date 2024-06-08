@@ -14,6 +14,7 @@ import { deposit } from "@/solana/methods/deposit";
 import { BorshAccountsCoder } from "@coral-xyz/anchor";
 import { IDL } from "@/solana/idl/idl";
 import { useRouter } from "next/router";
+import { IconX } from "@tabler/icons-react";
 
 interface DepositModalProps {
   open: boolean;
@@ -67,23 +68,20 @@ export default function DepositModal({ open, setOpen }: DepositModalProps) {
 
   return (
     <Dialog open={open}>
-      <DialogContent className="window z-[150] sm:max-w-[425px] rounded-none bg-[#FDCF79] border-0">
+      <DialogContent className="window z-[150] sm:max-w-[425px] rounded-none bg-zinc-900 border-0">
         <DialogHeader className="title-bar">
           <div className="flex w-full px-2 justify-between items-center">
             <DialogTitle className="text-left text-white">
               <label className="text-sm">Deposit Tokens</label>
             </DialogTitle>
-            <div className="title-bar-controls">
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Close"
-              ></button>
-            </div>
+            <button onClick={() => setOpen(false)} aria-label="Close">
+              <IconX className="w-4 h-4 text-white" />
+            </button>
           </div>
         </DialogHeader>
         <div className="w-full flex-col space-y-2 px-2 pb-4">
           <div className="w-full grid space-y-1">
-            <label className="text-base">Amount</label>
+            <label className="text-base text-zinc-300">Amount</label>
             <input
               type="number"
               defaultValue={amount}
@@ -92,7 +90,7 @@ export default function DepositModal({ open, setOpen }: DepositModalProps) {
           </div>
         </div>
         <button
-          className="mb-4 mx-2 btn text-base"
+          className="mb-4 mx-2 btn text-base text-white"
           onClick={() => depositTokens()}
         >
           Submit

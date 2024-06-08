@@ -46,36 +46,37 @@ export default function HelpMenu({ open, setOpen }: HelpMenuProps) {
                   leaveFrom="translate-x-0"
                   leaveTo="translate-x-full"
                 >
-                  <Dialog.Panel className="relative pointer-events-auto w-screen max-w-md z-100">
-                    <div className="no-visible-scrollbar flex h-full flex-col overflow-y-scroll py-6 shadow-xl bg-zinc-900">
+                  <Dialog.Panel className="relative pointer-events-auto w-screen max-w-md z-100 pb-4 mt-4 pr-4">
+                    <div className="no-visible-scrollbar flex h-full flex-col overflow-y-scroll py-6 shadow-xl bg-zinc-900 rounded-xl">
                       <div className="">
-                        <div className="title-bar flex items-start justify-between !bg-gradient-to-r !from-[#9945FF] !to-[#FF64D8]">
-                          <div className="title-bar-text px-2">
-                            <Dialog.Title className="text-base font-semibold leading-6 text-white">
+                        <div className="flex items-start justify-between">
+                          <div className="flex gap-2 items-center px-2">
+                            <Dialog.Title className="text-lg font-bold leading-6 text-white">
                               WTF is Hybrid DeFi?
                             </Dialog.Title>
                           </div>
                         </div>
                         <div className="mt-4 px-2">
-                          <label className="text-base text-zinc-300">
+                          <label className="text-base font-light text-zinc-300">
                             To put it simply, Hybrid DeFi allows you to swap
-                            between an NFT and SPL token.
+                            between an NFT and SPL token.{" "}
                           </label>
-                          <label className="mt-3 text-base font-semibold text-zinc-300">
+                          <label className="mt-3 text-base text-zinc-300">
                             This allows for a few things:
                           </label>
-                          <ul className="mt-1 text-base text-zinc-300 flex flex-col">
+                          <ul className="mt-1 text-base font-light text-zinc-300 flex flex-col">
                             <label className="text-base">• Built in liquidity for NFTs</label>
                             <label className="text-base">• Arbitrage opportunities</label>
                           </ul>
-                          <label className="mt-3 text-base text-zinc-300">
+                          <label className="text-base font-light text-zinc-300">
                             In this case, you can select a pool tied to a pNFT collection and SPL token pNFT mint.
-                            This pool will have a swap factor, which denotes how many tokens you will get for swapping a common NFT.
+                            This pool will have a swap factor, which denotes how many tokens you will get.
                           </label>
+                          <div className="flex gap-4 items-center mt-6">
                           {WL_KEYS.includes(publicKey?.toString() as string) ? (
                             <button
                               onClick={() => setIsOpen(true)}
-                              className="mt-4 btn"
+                              className="flex gap-2 w-fit items-center text-lg py-1 px-2 rounded-md bg-[#FF64D8] text-white"
                             >
                               Create Pool
                             </button>
@@ -90,11 +91,12 @@ export default function HelpMenu({ open, setOpen }: HelpMenuProps) {
                             "9rdkV51HqRnfFiSYn48PTNo2DMawSJU1RVXXWKs6PReq" ? (
                             <button
                               onClick={() => setShown(true)}
-                              className="mt-4 btn"
+                              className="flex gap-2 w-fit items-center text-lg py-1 px-2 rounded-md bg-[#FF64D8] text-white"
                             >
                               Deposit
                             </button>
                           ) : null}
+                          </div>
                         </div>
                       </div>
                     </div>
