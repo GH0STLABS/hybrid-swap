@@ -9,7 +9,6 @@ const nextConfig = {
       'avatar.vercel.sh',
       'arweave.net',
       'i.imgur.com',
-      'quackassets.pages.dev',
       'shdw-drive.genesysgo.net',
       'gateway.irys.xyz'
     ]

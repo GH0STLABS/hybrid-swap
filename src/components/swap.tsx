@@ -108,7 +108,7 @@ export default function SwapFrame({ id, name, config, token, nft }: SwapProps) {
                 <div className="title-bar-text pointer-events-none flex gap-1 items-center">
                   <IconPhotoScan className="w-5 h-5 text-zinc-400" />
                   <label className="text-zinc-400 text-sm pointer-events-none">
-                    You Send:
+                    You Swap:
                   </label>
                 </div>
               </div>

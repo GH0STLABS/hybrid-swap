@@ -78,8 +78,8 @@ export default function Swap({ id, name, config, token, nft }: SwapProps) {
   return (
     <>
       <SEO
-        title={`${name} | Gh0st Labs 404`}
-        description="Swap SPL-404 Enabled tokens with the Gh0st Labs Hybrid DeFi portal."
+        title={`${name} | Hybrid Swap`}
+        description="Swap SPL-404 Hybrid NFTs to Tokens and vice versa."
         image="/ghostlabscover.png"
       />
       <Header />

@@ -85,7 +85,7 @@ export default function NFTModal({
               </div>
             ) : (
               <div className="w-full py-16 flex justify-center">
-                <label className="text-lg text-white text-center">
+                <label className="text-lg text-white text-center p-10">
                   No NFTs found.
                 </label>
               </div>

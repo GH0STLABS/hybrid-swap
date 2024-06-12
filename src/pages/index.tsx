@@ -60,7 +60,7 @@ export default function Home() {
   return (
     <>
       <SEO
-        title="Hybrid DeFi by Gh0st Labs"
+        title="Hybrid Collections launched by GH0ST LABS"
         description="Swap SPL-404 Enabled tokens with the Gh0st Labs Hybrid DeFi portal."
         image="/ghostlabscover.png"
       />

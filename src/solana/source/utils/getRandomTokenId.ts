@@ -1,4 +1,4 @@
-import { quackMint, quackPoolId } from "../consts";
+import { ghostMint, ghostPoolId } from "../consts";
 import * as anchor from "@coral-xyz/anchor";
 import { getProgram } from "../program";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";

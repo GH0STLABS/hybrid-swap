@@ -11,9 +11,9 @@ export const metadataProgram = new anchor.web3.PublicKey(
   MPL_TOKEN_METADATA_PROGRAM_ID
 );
 
-export const quackMint = "EMeXmTBy4XwmpDLYVJhJ8e7acmqgN4XD7s1HXLJXeefk"; //"FGHHVjzQe8m3PFcuzmmooDifbXuS16EP3EpEgWaWF5AN";
-export const quackToken = "29CF88kz4sqvh8c5Jh6YNtxNf9MqZ3jR7Xd5wSRcQ1Ja";
-export const quackPoolId = "3SL53vHFrw5qvrLHtNis7G5RdNtmyT86Gs9B58DNidHg"; //"FUVgASpMK1cZBGMfAvHjcxSRrJK8r6geuAqnEKqQ9gYa"; //"3eAo2MC9aP2vKegioU7SV6tkh134ohHjg3YRJRnvqpXP";
+export const ghostMint = "EMeXmTBy4XwmpDLYVJhJ8e7acmqgN4XD7s1HXLJXeefk"; //"FGHHVjzQe8m3PFcuzmmooDifbXuS16EP3EpEgWaWF5AN";
+export const ghostToken = "29CF88kz4sqvh8c5Jh6YNtxNf9MqZ3jR7Xd5wSRcQ1Ja";
+export const ghostPoolId = "3SL53vHFrw5qvrLHtNis7G5RdNtmyT86Gs9B58DNidHg"; //"FUVgASpMK1cZBGMfAvHjcxSRrJK8r6geuAqnEKqQ9gYa"; //"3eAo2MC9aP2vKegioU7SV6tkh134ohHjg3YRJRnvqpXP";
 
 export const WL_KEYS = [
   "3nHNJd8mjZFTVkA2dPTSCnWjzJU3XvC5nGSrDMWNKpQb",

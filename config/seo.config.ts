@@ -1,7 +1,7 @@
 const config = {
     general: {
-      name: "Gh0st Labs",
-      domain: "docs.gh0stlabs.io",
+      name: "GH0ST LABS",
+      domain: "gh0stlabs.io",
       twitter: "@GH0STC0IN",
     },
   };
